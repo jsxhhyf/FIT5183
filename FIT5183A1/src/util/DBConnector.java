@@ -21,6 +21,7 @@ public class DBConnector {
 		// TODO Auto-generated method stub
 		Connection c = connect(CONNECT_STRING);
 		ResultSet rs = query(c, "select * from Airline1 where FLNO = 'CA1820'");
+
 		try {
 			while (rs.next()) {
 				System.out.println(rs.getString("CLAS"));
