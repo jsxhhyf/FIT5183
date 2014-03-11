@@ -82,7 +82,7 @@ class Handler extends Thread {
 		// TODO Auto-generated constructor stub
 		this.incomingSocket = socket;
 		try {
-			SERVER_ADDRESS = InetAddress.getLocalHost();
+			SERVER_ADDRESS = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -91,7 +91,8 @@ class Handler extends Thread {
 		try {
 
 			for (int i = 1; i <= 3; i++) {
-				outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i - 1]);
+				//outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i - 1]);
+				outgoingSockets[1] = new Socket(SERVER_ADDRESS,10011);
 				//
 				// printStream = new
 				// PrintStream(outgoingSockets[i].getOutputStream());
@@ -105,12 +106,13 @@ class Handler extends Thread {
 
 			printer = new PrintStream(incomingSocket.getOutputStream());
 
-			for (int i1 = 1; i1 <= 3; i1++) {
+			for (int i1 = 1; i1 <= 1; i1++) {
 				bufferedReaders[i1] = new BufferedReader(new InputStreamReader(
 						outgoingSockets[i1].getInputStream()));
 				printStreams[i1] = new PrintStream(
 						outgoingSockets[i1].getOutputStream());
 			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -135,22 +137,22 @@ class Handler extends Thread {
 				if (messageStrings[0].equals("0")) {
 					if (!messageStrings[2].equals("")) { // if it has a certain
 															// airline
-						printer.print(forwardQuery(
+						printer.println(forwardQuery(
 								Integer.valueOf(messageStrings[2]),
 								incomingString));
 					} else {
-						printer.print(forwardQuery(0, incomingString));
+						printer.println(forwardQuery(0, incomingString));
 					}
 				} else if (messageStrings[0].equals("1")) {
-					printer.print(forwardUpdate(
+					printer.println(forwardUpdate(
 							Integer.valueOf(messageStrings[2]), incomingString));
 				}
 
 			}
 			incomingSocket.close();
-//			for (int i = 0; i < 3; i++) {
-//				outgoingSockets[i].close();
-//			}
+			for (int i = 1; i <= 1; i++) {
+				printStreams[i].println("BYE");
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -166,7 +168,7 @@ class Handler extends Thread {
 	public String forwardQuery(int i, String msgString) {
 		if (i != 0) {
 			String tempString = "";
-			printStreams[i].print(msgString);
+			printStreams[i].println(msgString);
 			try {
 				tempString = bufferedReaders[i].readLine();
 			} catch (IOException e) {
@@ -178,7 +180,7 @@ class Handler extends Thread {
 		} else {
 			String tempString = "";
 			for (int i1 = 0; i1 < 3; i1++) {
-				printStreams[i1].print(msgString);
+				printStreams[i1].println(msgString);
 				try {
 					tempString += bufferedReaders[i1].readLine();
 					tempString += "*";
@@ -194,7 +196,7 @@ class Handler extends Thread {
 	public boolean forwardUpdate(int i, String mString) {
 
 		String tempString = "";
-		printStreams[i].print(mString);
+		printStreams[i].println(mString);
 		try {
 			tempString = bufferedReaders[i].readLine();
 		} catch (IOException e) {
