@@ -63,11 +63,11 @@ class Handler extends Thread {
 	public final int[] SERVER_PORT = { 10011, 10012, 10013 };
 	InetAddress SERVER_ADDRESS = null;
 	Socket incomingSocket;
-	Socket[] outgoingSockets = new Socket[3];
+	Socket[] outgoingSockets = new Socket[4];
 	BufferedReader reader = null;
 	PrintStream printer = null;
-	BufferedReader[] bufferedReaders = new BufferedReader[3];
-	PrintStream[] printStreams = new PrintStream[3];
+	BufferedReader[] bufferedReaders = new BufferedReader[4];
+	PrintStream[] printStreams = new PrintStream[4];
 	// BufferedReader bufferedReader = null;
 	// PrintStream printStream = null;
 	String incomingString;
@@ -91,8 +91,9 @@ class Handler extends Thread {
 		try {
 
 			for (int i = 1; i <= 3; i++) {
-				//outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i - 1]);
-				outgoingSockets[1] = new Socket(SERVER_ADDRESS,10011);
+				outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i - 1]);
+				Util.debug(SERVER_PORT[i-1]);
+				//outgoingSockets[1] = new Socket(SERVER_ADDRESS,10011);
 				//
 				// printStream = new
 				// PrintStream(outgoingSockets[i].getOutputStream());
@@ -106,7 +107,7 @@ class Handler extends Thread {
 
 			printer = new PrintStream(incomingSocket.getOutputStream());
 
-			for (int i1 = 1; i1 <= 1; i1++) {
+			for (int i1 = 1; i1 <= 3; i1++) {
 				bufferedReaders[i1] = new BufferedReader(new InputStreamReader(
 						outgoingSockets[i1].getInputStream()));
 				printStreams[i1] = new PrintStream(
@@ -150,7 +151,7 @@ class Handler extends Thread {
 
 			}
 			incomingSocket.close();
-			for (int i = 1; i <= 1; i++) {
+			for (int i = 1; i <= 3; i++) {
 				printStreams[i].println("BYE");
 			}
 
@@ -179,7 +180,7 @@ class Handler extends Thread {
 
 		} else {
 			String tempString = "";
-			for (int i1 = 0; i1 < 3; i1++) {
+			for (int i1 = 1; i1 <= 3; i1++) {
 				printStreams[i1].println(msgString);
 				try {
 					tempString += bufferedReaders[i1].readLine();

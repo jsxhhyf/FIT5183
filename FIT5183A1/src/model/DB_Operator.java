@@ -6,9 +6,8 @@
  */
 package model;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
 import util.DBConnector;
 import util.Util;
 
@@ -25,30 +24,30 @@ public class DB_Operator {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DB_Operator db_Operator = new DB_Operator();
-		FlightEntity f = new FlightEntity();
-
-		f = db_Operator.queryFlightByLocaAndDateAndTime("C_CITY1", "A_CITY1",
-				"2014-03-01", "00:00", "20:00", "airline1");
-
-		if (db_Operator.connection != null) {
-			try {
-				db_Operator.connection.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (f != null) {
-			Util.debug(f.getDeptAirportString());
-		}
+//		DB_Operator db_Operator = new DB_Operator();
+//		FlightEntity f = new FlightEntity();
+//
+//		f = db_Operator.queryFlightByLocaAndDateAndTime("C_CITY1", "A_CITY1",
+//				"2014-03-01", "00:00", "20:00", "airline1");
+//
+//		if (db_Operator.connection != null) {
+//			try {
+//				db_Operator.connection.close();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		if (f != null) {
+//			Util.debug(f.getDeptAirportString());
+//		}
 
 	}
 
 	private final String QUERY_STRING = "select * from ";
 	// private final String QUERY_BY_NUMBER_STRING = " where FLNO = '";
 
-	private Connection connection;
+//	private Connection connection;
 
 	// private ResultSet resultSet;
 	// private FlightEntity FlightEntity;
@@ -56,12 +55,12 @@ public class DB_Operator {
 	/**
 	 * non-parameter constructor, initialize the connection to database
 	 */
-	public DB_Operator() {
-		// TODO Auto-generated constructor stub
-		connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-		// resultSet = null;
-		// FlightEntity = new FlightEntity();
-	}
+//	public DB_Operator() {
+//		 TODO Auto-generated constructor stub
+//		connection = DBConnector.connect(DBConnector.CONNECT_STRING);
+//		 resultSet = null;
+//		 FlightEntity = new FlightEntity();
+//	}
 
 	/**
 	 * query the flight by flight number
@@ -72,16 +71,30 @@ public class DB_Operator {
 	 */
 	public FlightEntity queryFlighByNo(String flightNoString, String tableString) {
 
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
+
 		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		if (flightNoString.length() != 6) { // validate the flight number
 			Util.debug("Wrong format of flight number!");
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
 					+ tableString + " where FLNO = '" + flightNoString + "'");
 			FlightEntity = transformToFlightEntity(resultSet);
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return FlightEntity;
 		}
 	}
@@ -95,6 +108,7 @@ public class DB_Operator {
 	 */
 	public FlightEntity queryFlightByDept(String deptString, String tableString) {
 
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
@@ -102,6 +116,12 @@ public class DB_Operator {
 				+ "where DPCT = '" + deptString + "'");
 		FlightEntity = transformToFlightEntity(resultSet);
 
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return FlightEntity;
 	}
 
@@ -116,6 +136,7 @@ public class DB_Operator {
 	public FlightEntity queryFlightByLocation(String deptString,
 			String destString, String tableString) {
 
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
@@ -124,6 +145,12 @@ public class DB_Operator {
 				+ "'");
 		FlightEntity = transformToFlightEntity(resultSet);
 
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return FlightEntity;
 	}
 
@@ -139,6 +166,7 @@ public class DB_Operator {
 	public FlightEntity queryFlightByLocaAndDate(String deptString,
 			String destString, String dateString, String tableString) {
 
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
@@ -148,6 +176,12 @@ public class DB_Operator {
 				+ "')");
 		FlightEntity = transformToFlightEntity(resultSet);
 
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return FlightEntity;
 	}
 
@@ -155,6 +189,7 @@ public class DB_Operator {
 			String destString, String dateString, String timeString1,
 			String timeString2, String tableString) {
 
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
@@ -174,14 +209,27 @@ public class DB_Operator {
 								+ dateString + " " + timeString1 + "')");
 		FlightEntity = transformToFlightEntity(resultSet);
 
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return FlightEntity;
 	}
 	
 	public boolean book(String flightNumer, String classString, String tableString) {
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		int temp = queryFlighByNo(flightNumer, tableString).getSeatAvalible();
 		temp--;
 		String updateString = "update " + tableString + " set SEAT = " + temp + " where FLNO = '" + flightNumer + "'";
 		int rows = DBConnector.update(connection, updateString);
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (rows > 0) {
 			return true;
 		} else {

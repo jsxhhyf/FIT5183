@@ -54,7 +54,7 @@ public class BrokerTest {
 					new InputStreamReader(in));
 			out = new PrintStream(socket.getOutputStream());
 			// Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4*DepatingDate5*DepartingTime6*Class7*#
-			String string = "1*CA1220*1*C_CITY1*A_CITY1*2014-03-01***FIR*#";
+			String string = "0*CA1220**C_CITY1*A_CITY1*2014-03-01***FIR*#";
 			out.println(string);
 			String temp = null;
 			temp = reader.readLine();

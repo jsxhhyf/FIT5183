@@ -53,6 +53,7 @@ public class DBConnector {
 					USERNAME_STRING, ""); // throw SQLException
 		} catch (Exception e) { // combine two different exceptions
 			// TODO: handle exception
+			Util.debug(e.toString());
 			System.out.println("Fail to build connection!");
 		}
 		return connection;
