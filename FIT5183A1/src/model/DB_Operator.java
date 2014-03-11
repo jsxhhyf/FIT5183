@@ -80,7 +80,7 @@ public class DB_Operator {
 			return null;
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
-					+ tableString + "where FLNO = '" + flightNoString + "'");
+					+ tableString + " where FLNO = '" + flightNoString + "'");
 			FlightEntity = transformToFlightEntity(resultSet);
 			return FlightEntity;
 		}

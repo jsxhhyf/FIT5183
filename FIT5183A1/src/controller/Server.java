@@ -23,7 +23,6 @@ import util.Util;
  */
 public class Server {
 
-	public static int a;
 	/**
 	 * @param args
 	 */
@@ -35,6 +34,7 @@ public class Server {
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket=new ServerSocket(PORT);
+			Util.debug(PORT);Util.debug(serverSocket.getInetAddress().toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,12 +44,14 @@ public class Server {
 			Socket incoming = null;
 			try {
 				incoming = serverSocket.accept();
+				Util.debug(1);
+				Util.debug(incoming.getInetAddress().toString());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				continue;
 			}
-			new SocketHandler(incoming, tablenameString);
+			new SocketHandler(incoming, tablenameString).start();
 		}
 	}
 
@@ -71,6 +73,7 @@ class SocketHandler extends Thread {
 	SocketHandler(Socket incoming, String tableName) {
 		this.incomingSocket = incoming;
 		this.tablename = tableName;
+		Util.debug(2);
 	}
 	
 	public void run() {
@@ -80,6 +83,7 @@ class SocketHandler extends Thread {
 			PrintStream printStream = new PrintStream(incomingSocket.getOutputStream());
 			
 			while (true) {
+				Util.debug(3);
 				String messageString = reader.readLine();
 				Util.debug(messageString);
 
@@ -96,18 +100,18 @@ class SocketHandler extends Thread {
 					if (!strings[1].equals("")) {
 						flightEntity = dbOperator.queryFlighByNo(strings[1],
 								tablename);
-						printStream.print(flightEntity.getSeatAvalible());
+						printStream.println(flightEntity.getSeatAvalible());
 					} else {
 						flightEntity = dbOperator.queryFlightByLocaAndDate(
 								strings[3], strings[4], strings[5], tablename);
-						printStream.print(flightEntity.getSeatAvalible());
+						printStream.println(flightEntity.getSeatAvalible());
 					}
 				} else if (strings[0].equals("1")){ // 1 for booking
 					synchronized (syncString) {
 						if (dbOperator.book(strings[1], strings[7], tablename)) {
-							printStream.print("booked");
+							printStream.println("booked");
 						} else {
-							printStream.print("failed");
+							printStream.println("failed");
 						}
 					}
 				}

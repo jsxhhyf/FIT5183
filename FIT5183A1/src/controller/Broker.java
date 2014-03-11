@@ -90,8 +90,8 @@ class Handler extends Thread {
 
 		try {
 
-			for (int i = 0; i < 3; i++) {
-				outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i]);
+			for (int i = 1; i <= 3; i++) {
+				outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i - 1]);
 				//
 				// printStream = new
 				// PrintStream(outgoingSockets[i].getOutputStream());
@@ -105,7 +105,7 @@ class Handler extends Thread {
 
 			printer = new PrintStream(incomingSocket.getOutputStream());
 
-			for (int i1 = 0; i1 < 3; i1++) {
+			for (int i1 = 1; i1 <= 3; i1++) {
 				bufferedReaders[i1] = new BufferedReader(new InputStreamReader(
 						outgoingSockets[i1].getInputStream()));
 				printStreams[i1] = new PrintStream(
@@ -148,9 +148,9 @@ class Handler extends Thread {
 
 			}
 			incomingSocket.close();
-			for (int i = 0; i < 3; i++) {
-				outgoingSockets[i].close();
-			}
+//			for (int i = 0; i < 3; i++) {
+//				outgoingSockets[i].close();
+//			}
 
 		} catch (IOException e) {
 			e.printStackTrace();

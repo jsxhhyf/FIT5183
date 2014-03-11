@@ -24,4 +24,7 @@ public class Util {
 		System.out.println(string);
 	}
 
+	public static void debug(int i) {
+		System.out.println(i);
+	}
 }

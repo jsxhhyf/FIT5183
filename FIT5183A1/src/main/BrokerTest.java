@@ -1,5 +1,8 @@
 /**
- * 
+ * BrokerTest.java
+ * FIT5183A1
+ * Phillip
+ * 2014年3月11日 下午9:49:44
  */
 package main;
 
@@ -16,11 +19,10 @@ import util.Util;
 
 /**
  * @author Phillip
- * 
+ *
  */
-public class Main {
-
-	public static final int PORT = 10011;
+public class BrokerTest {
+	public static final int PORT = 10010;
 
 	/**
 	 * @param args
@@ -52,7 +54,7 @@ public class Main {
 					new InputStreamReader(in));
 			out = new PrintStream(socket.getOutputStream());
 			// Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4*DepatingDate5*DepartingTime6*Class7*#
-			String string = "0***C_CITY1*A_CITY1*2014-03-01*#";
+			String string = "0**1*C_CITY1*A_CITY1*2014-03-01*#";
 			out.println(string);
 			String temp = null;
 			temp = reader.readLine();
