@@ -23,6 +23,7 @@ import util.Util;
  */
 public class Server {
 
+	public static int a;
 	/**
 	 * @param args
 	 */
@@ -65,6 +66,8 @@ class SocketHandler extends Thread {
 	DB_Operator dbOperator = new DB_Operator();
 	FlightEntity flightEntity = null;
 	
+	String syncString = new String();
+	
 	SocketHandler(Socket incoming, String tableName) {
 		this.incomingSocket = incoming;
 		this.tablename = tableName;
@@ -89,15 +92,26 @@ class SocketHandler extends Thread {
 				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
 				 * *DepatingDate5*DepartingTime6*Class7*#
 				 */
-				if (!strings[0].equals("")) {
-					flightEntity = dbOperator.queryFlighByNo(strings[0],
-							tablename);
-					printStream.print(flightEntity.getSeatAvalible());
-				} else {
-					flightEntity = dbOperator.queryFlightByLocaAndDate(
-							strings[3], strings[4], strings[5], tablename);
-					printStream.print(flightEntity.getSeatAvalible());
+				if (strings[0].equals("0")) { // 0 for query
+					if (!strings[1].equals("")) {
+						flightEntity = dbOperator.queryFlighByNo(strings[1],
+								tablename);
+						printStream.print(flightEntity.getSeatAvalible());
+					} else {
+						flightEntity = dbOperator.queryFlightByLocaAndDate(
+								strings[3], strings[4], strings[5], tablename);
+						printStream.print(flightEntity.getSeatAvalible());
+					}
+				} else if (strings[0].equals("1")){ // 1 for booking
+					synchronized (syncString) {
+						if (dbOperator.book(strings[1], strings[7], tablename)) {
+							printStream.print("booked");
+						} else {
+							printStream.print("failed");
+						}
+					}
 				}
+				
 			}
 			incomingSocket.close();
 		} catch (IOException e) {

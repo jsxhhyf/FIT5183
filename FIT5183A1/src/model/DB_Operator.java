@@ -176,6 +176,18 @@ public class DB_Operator {
 
 		return FlightEntity;
 	}
+	
+	public boolean book(String flightNumer, String classString, String tableString) {
+		int temp = queryFlighByNo(flightNumer, tableString).getSeatAvalible();
+		temp--;
+		String updateString = "update " + tableString + " set SEAT = " + temp + " where FLNO = '" + flightNumer + "'";
+		int rows = DBConnector.update(connection, updateString);
+		if (rows > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * pack the query result into FlightEntity structure for further use

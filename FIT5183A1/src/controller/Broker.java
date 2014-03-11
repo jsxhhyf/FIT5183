@@ -22,14 +22,15 @@ import util.Util;
  * 
  */
 public class Broker {
-	
+
 	public static int BROKER_PORT = 10010;
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(BROKER_PORT);
@@ -55,8 +56,7 @@ public class Broker {
 }
 
 /**
- * @author Phillip 
- * a thread to deal with the client request
+ * @author Phillip a thread to deal with the client request
  */
 class Handler extends Thread {
 
@@ -68,15 +68,15 @@ class Handler extends Thread {
 	PrintStream printer = null;
 	BufferedReader[] bufferedReaders = new BufferedReader[3];
 	PrintStream[] printStreams = new PrintStream[3];
-	BufferedReader bufferedReader = null;
-	PrintStream printStream = null;
+	// BufferedReader bufferedReader = null;
+	// PrintStream printStream = null;
 	String incomingString;
 	String[] messageStrings;
 
 	/**
 	 * @param socket
-	 * constructor with the client socket as the parameter
-	 * initialize the sockets and input and output objects
+	 *            constructor with the client socket as the parameter initialize
+	 *            the sockets and input and output objects
 	 */
 	public Handler(Socket socket) {
 		// TODO Auto-generated constructor stub
@@ -92,19 +92,18 @@ class Handler extends Thread {
 
 			for (int i = 0; i < 3; i++) {
 				outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i]);
-				
-				printStream = new PrintStream(outgoingSockets[i].getOutputStream());
-
-				bufferedReader = new BufferedReader(new InputStreamReader(
-						outgoingSockets[i].getInputStream()));
+				//
+				// printStream = new
+				// PrintStream(outgoingSockets[i].getOutputStream());
+				//
+				// bufferedReader = new BufferedReader(new InputStreamReader(
+				// outgoingSockets[i].getInputStream()));
 			}
 
 			reader = new BufferedReader(new InputStreamReader(
 					incomingSocket.getInputStream()));
 
 			printer = new PrintStream(incomingSocket.getOutputStream());
-
-			
 
 			for (int i1 = 0; i1 < 3; i1++) {
 				bufferedReaders[i1] = new BufferedReader(new InputStreamReader(
@@ -121,7 +120,7 @@ class Handler extends Thread {
 
 	public void run() {
 		try {
-			
+
 			while (true) {
 				this.incomingString = reader.readLine();
 				if (incomingString.trim().equalsIgnoreCase("BYE")) {
@@ -133,19 +132,26 @@ class Handler extends Thread {
 				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
 				 * *DepatingDate5*DepartingTime6*Class7*#
 				 */
-				if (!messageStrings[2].equals("")) { // if it has a certain
-														// airline
-					printer.print(forward(Integer.valueOf(messageStrings[2]),
-							incomingString));
-				} else {
-					printer.print(forward(0, incomingString));
+				if (messageStrings[0].equals("0")) {
+					if (!messageStrings[2].equals("")) { // if it has a certain
+															// airline
+						printer.print(forwardQuery(
+								Integer.valueOf(messageStrings[2]),
+								incomingString));
+					} else {
+						printer.print(forwardQuery(0, incomingString));
+					}
+				} else if (messageStrings[0].equals("1")) {
+					printer.print(forwardUpdate(
+							Integer.valueOf(messageStrings[2]), incomingString));
 				}
+
 			}
 			incomingSocket.close();
-			for( int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; i++) {
 				outgoingSockets[i].close();
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,15 +160,15 @@ class Handler extends Thread {
 	/**
 	 * @param i
 	 * @param msgString
-	 * @return the query result
-	 * forward the query string to the correct database server
+	 * @return the query result forward the query string to the correct database
+	 *         server
 	 */
-	public String forward(int i, String msgString) {
+	public String forwardQuery(int i, String msgString) {
 		if (i != 0) {
 			String tempString = "";
-			printStream.print(msgString);
+			printStreams[i].print(msgString);
 			try {
-				tempString = bufferedReader.readLine();
+				tempString = bufferedReaders[i].readLine();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -171,7 +177,7 @@ class Handler extends Thread {
 
 		} else {
 			String tempString = "";
-			for(int i1 = 0; i1 < 3; i1++) {
+			for (int i1 = 0; i1 < 3; i1++) {
 				printStreams[i1].print(msgString);
 				try {
 					tempString += bufferedReaders[i1].readLine();
@@ -183,6 +189,24 @@ class Handler extends Thread {
 			}
 			return tempString;
 		}
+	}
+
+	public boolean forwardUpdate(int i, String mString) {
+
+		String tempString = "";
+		printStreams[i].print(mString);
+		try {
+			tempString = bufferedReaders[i].readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (tempString.equals("booked")) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 }
