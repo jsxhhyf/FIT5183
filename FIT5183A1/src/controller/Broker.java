@@ -8,11 +8,10 @@ package controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -23,23 +22,41 @@ import util.Util;
  * 
  */
 public class Broker {
-
+	
+	public static int BROKER_PORT = 10010;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String temp = "0**abc".split("\\*")[1];
-		if (temp.equals("")) {
-			Util.debug("111");
+		
+		ServerSocket serverSocket = null;
+		try {
+			serverSocket = new ServerSocket(BROKER_PORT);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
 		}
-
+		Util.debug("Broke Server is running!");
+		while (true) {
+			Socket incoming = null;
+			try {
+				incoming = serverSocket.accept();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				continue;
+			}
+			new Handler(incoming).start();
+		}
 	}
 
 }
 
 /**
- * @author Phillip a thread to deal with the client request
+ * @author Phillip 
+ * a thread to deal with the client request
  */
 class Handler extends Thread {
 
@@ -56,6 +73,11 @@ class Handler extends Thread {
 	String incomingString;
 	String[] messageStrings;
 
+	/**
+	 * @param socket
+	 * constructor with the client socket as the parameter
+	 * initialize the sockets and input and output objects
+	 */
 	public Handler(Socket socket) {
 		// TODO Auto-generated constructor stub
 		this.incomingSocket = socket;
@@ -99,26 +121,42 @@ class Handler extends Thread {
 
 	public void run() {
 		try {
-
-			this.incomingString = reader.readLine();
-			this.messageStrings = incomingString.split("\\*");
-			/*
-			 * the format of the incoming message is
-			 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
-			 * *DepatingDate5*DepartingTime6*Class7*#
-			 */
-			if (!messageStrings[2].equals("")) { // if it has a certain airline
-				printer.print(forward(Integer.valueOf(messageStrings[2]),
-						incomingString));
-			} else {
-				printer.print(forward(0, incomingString));
+			
+			while (true) {
+				this.incomingString = reader.readLine();
+				if (incomingString.trim().equalsIgnoreCase("BYE")) {
+					break;
+				}
+				this.messageStrings = incomingString.split("\\*");
+				/*
+				 * the format of the incoming message is
+				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
+				 * *DepatingDate5*DepartingTime6*Class7*#
+				 */
+				if (!messageStrings[2].equals("")) { // if it has a certain
+														// airline
+					printer.print(forward(Integer.valueOf(messageStrings[2]),
+							incomingString));
+				} else {
+					printer.print(forward(0, incomingString));
+				}
 			}
-
+			incomingSocket.close();
+			for( int i = 0; i < 3; i++) {
+				outgoingSockets[i].close();
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * @param i
+	 * @param msgString
+	 * @return the query result
+	 * forward the query string to the correct database server
+	 */
 	public String forward(int i, String msgString) {
 		if (i != 0) {
 			String tempString = "";

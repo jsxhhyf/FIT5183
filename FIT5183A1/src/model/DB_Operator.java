@@ -6,13 +6,9 @@
  */
 package model;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-
 import util.DBConnector;
 import util.Util;
 
@@ -30,7 +26,7 @@ public class DB_Operator {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		DB_Operator db_Operator = new DB_Operator();
-		Flightinfo f = new Flightinfo();
+		FlightEntity f = new FlightEntity();
 
 		f = db_Operator.queryFlightByLocaAndDateAndTime("C_CITY1", "A_CITY1",
 				"2014-03-01", "00:00", "20:00", "airline1");
@@ -55,7 +51,7 @@ public class DB_Operator {
 	private Connection connection;
 
 	// private ResultSet resultSet;
-	// private Flightinfo flightInfo;
+	// private FlightEntity FlightEntity;
 
 	/**
 	 * non-parameter constructor, initialize the connection to database
@@ -64,7 +60,7 @@ public class DB_Operator {
 		// TODO Auto-generated constructor stub
 		connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		// resultSet = null;
-		// flightInfo = new Flightinfo();
+		// FlightEntity = new FlightEntity();
 	}
 
 	/**
@@ -72,11 +68,11 @@ public class DB_Operator {
 	 * 
 	 * @param flightNoString
 	 * @param tableString
-	 * @return FlightInfo structure which represents the corresponding flight
+	 * @return FlightEntity structure which represents the corresponding flight
 	 */
-	public Flightinfo queryFlighByNo(String flightNoString, String tableString) {
+	public FlightEntity queryFlighByNo(String flightNoString, String tableString) {
 
-		Flightinfo flightInfo = null;
+		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		if (flightNoString.length() != 6) { // validate the flight number
@@ -85,8 +81,8 @@ public class DB_Operator {
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
 					+ tableString + "where FLNO = '" + flightNoString + "'");
-			flightInfo = transformToFlightInfo(resultSet);
-			return flightInfo;
+			FlightEntity = transformToFlightEntity(resultSet);
+			return FlightEntity;
 		}
 	}
 
@@ -97,16 +93,16 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return the corresponding flight info
 	 */
-	public Flightinfo queryFlightByDept(String deptString, String tableString) {
+	public FlightEntity queryFlightByDept(String deptString, String tableString) {
 
-		Flightinfo flightinfo = null;
+		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ "where DPCT = '" + deptString + "'");
-		flightinfo = transformToFlightInfo(resultSet);
+		FlightEntity = transformToFlightEntity(resultSet);
 
-		return flightinfo;
+		return FlightEntity;
 	}
 
 	/**
@@ -117,18 +113,18 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return the corresponding flight info
 	 */
-	public Flightinfo queryFlightByLocation(String deptString,
+	public FlightEntity queryFlightByLocation(String deptString,
 			String destString, String tableString) {
 
-		Flightinfo flightinfo = null;
+		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ "where DPCT = '" + deptString + "' and DSCT = '" + destString
 				+ "'");
-		flightinfo = transformToFlightInfo(resultSet);
+		FlightEntity = transformToFlightEntity(resultSet);
 
-		return flightinfo;
+		return FlightEntity;
 	}
 
 	/**
@@ -140,26 +136,26 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return the corresponding flight info
 	 */
-	public Flightinfo queryFlightByLocaAndDate(String deptString,
+	public FlightEntity queryFlightByLocaAndDate(String deptString,
 			String destString, String dateString, String tableString) {
 
-		Flightinfo flightinfo = null;
+		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ " where DPCT = '" + deptString + "' and DSCT = '"
 				+ destString + "' and TO_DAYS(DPDT) = TO_DAYS('" + dateString
 				+ "')");
-		flightinfo = transformToFlightInfo(resultSet);
+		FlightEntity = transformToFlightEntity(resultSet);
 
-		return flightinfo;
+		return FlightEntity;
 	}
 
-	public Flightinfo queryFlightByLocaAndDateAndTime(String deptString,
+	public FlightEntity queryFlightByLocaAndDateAndTime(String deptString,
 			String destString, String dateString, String timeString1,
 			String timeString2, String tableString) {
 
-		Flightinfo flightinfo = null;
+		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector
@@ -176,20 +172,20 @@ public class DB_Operator {
 								+ timeString2
 								+ "') and UNIX_TIMESTAMP(CONCAT(DPDT,' ',DPTM)) > UNIX_TIMESTAMP('"
 								+ dateString + " " + timeString1 + "')");
-		flightinfo = transformToFlightInfo(resultSet);
+		FlightEntity = transformToFlightEntity(resultSet);
 
-		return flightinfo;
+		return FlightEntity;
 	}
 
 	/**
-	 * pack the query result into FlightInfo structure for further use
+	 * pack the query result into FlightEntity structure for further use
 	 * 
 	 * @param rSet
-	 * @return a FlightInfo
+	 * @return a FlightEntity
 	 */
-	public Flightinfo transformToFlightInfo(ResultSet rSet) {
+	public FlightEntity transformToFlightEntity(ResultSet rSet) {
 
-		Flightinfo f = new Flightinfo();
+		FlightEntity f = new FlightEntity();
 		if (rSet == null) {
 			Util.debug("ResultSet is null during the transformation!");
 			return null;
@@ -220,201 +216,3 @@ public class DB_Operator {
 
 }
 
-/**
- * @author Phillip a structure to store an entry from the database
- */
-class Flightinfo {
-
-	private String flightNumString;
-	private String deptCityString;
-	private String deptAirportString;
-	private String destCityString;
-	private String destAirportString;
-	private Date deptDate;
-	private Date arrvDate;
-	private Time deptTime;
-	private Time arrvTime;
-	private String seatClass;
-	private BigDecimal priceBigDecimal;
-	private int seatAvalible;
-
-	/**
-	 * @return the flightNumString
-	 */
-	public String getFlightNumString() {
-		return flightNumString;
-	}
-
-	/**
-	 * @param flightNumString
-	 *            the flightNumString to set
-	 */
-	public void setFlightNumString(String flightNumString) {
-		this.flightNumString = flightNumString;
-	}
-
-	/**
-	 * @return the deptCityString
-	 */
-	public String getDeptCityString() {
-		return deptCityString;
-	}
-
-	/**
-	 * @param deptCityString
-	 *            the deptCityString to set
-	 */
-	public void setDeptCityString(String deptCityString) {
-		this.deptCityString = deptCityString;
-	}
-
-	/**
-	 * @return the deptAirportString
-	 */
-	public String getDeptAirportString() {
-		return deptAirportString;
-	}
-
-	/**
-	 * @param deptAirportString
-	 *            the deptAirportString to set
-	 */
-	public void setDeptAirportString(String deptAirportString) {
-		this.deptAirportString = deptAirportString;
-	}
-
-	/**
-	 * @return the destCityString
-	 */
-	public String getDestCityString() {
-		return destCityString;
-	}
-
-	/**
-	 * @param destCityString
-	 *            the destCityString to set
-	 */
-	public void setDestCityString(String destCityString) {
-		this.destCityString = destCityString;
-	}
-
-	/**
-	 * @return the destAirportString
-	 */
-	public String getDestAirportString() {
-		return destAirportString;
-	}
-
-	/**
-	 * @param destAirportString
-	 *            the destAirportString to set
-	 */
-	public void setDestAirportString(String destAirportString) {
-		this.destAirportString = destAirportString;
-	}
-
-	/**
-	 * @return the deptDate
-	 */
-	public Date getDeptDate() {
-		return deptDate;
-	}
-
-	/**
-	 * @param deptDate
-	 *            the deptDate to set
-	 */
-	public void setDeptDate(Date deptDate) {
-		this.deptDate = deptDate;
-	}
-
-	/**
-	 * @return the arrvDate
-	 */
-	public Date getArrvDate() {
-		return arrvDate;
-	}
-
-	/**
-	 * @param arrvDate
-	 *            the arrvDate to set
-	 */
-	public void setArrvDate(Date arrvDate) {
-		this.arrvDate = arrvDate;
-	}
-
-	/**
-	 * @return the depTime
-	 */
-	public Time getDeptTime() {
-		return deptTime;
-	}
-
-	/**
-	 * @param depTime
-	 *            the depTime to set
-	 */
-	public void setDeptTime(Time deptTime) {
-		this.deptTime = deptTime;
-	}
-
-	/**
-	 * @return the arrvTime
-	 */
-	public Time getArrvTime() {
-		return arrvTime;
-	}
-
-	/**
-	 * @param arrvTime
-	 *            the arrvTime to set
-	 */
-	public void setArrvTime(Time arrvTime) {
-		this.arrvTime = arrvTime;
-	}
-
-	/**
-	 * @return the seatClass
-	 */
-	public String getSeatClass() {
-		return seatClass;
-	}
-
-	/**
-	 * @param seatClass
-	 *            the seatClass to set
-	 */
-	public void setSeatClass(String seatClass) {
-		this.seatClass = seatClass;
-	}
-
-	/**
-	 * @return the priceBigDecimal
-	 */
-	public BigDecimal getPriceBigDecimal() {
-		return priceBigDecimal;
-	}
-
-	/**
-	 * @param priceBigDecimal
-	 *            the priceBigDecimal to set
-	 */
-	public void setPriceBigDecimal(BigDecimal priceBigDecimal) {
-		this.priceBigDecimal = priceBigDecimal;
-	}
-
-	/**
-	 * @return the seatAvalible
-	 */
-	public int getSeatAvalible() {
-		return seatAvalible;
-	}
-
-	/**
-	 * @param seatAvalible
-	 *            the seatAvalible to set
-	 */
-	public void setSeatAvalible(int seatAvalible) {
-		this.seatAvalible = seatAvalible;
-	}
-}
