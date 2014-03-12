@@ -94,7 +94,7 @@ class SocketHandler extends Thread {
 				/*
 				 * the format of the incoming message is
 				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
-				 * *DepatingDate5*DepartingTime6*Class7*#
+				 * *DepatingDate5*Class6*#
 				 */
 				if (strings[0].equals("0")) { // 0 for query
 					if (!strings[1].equals("")) {
@@ -108,7 +108,7 @@ class SocketHandler extends Thread {
 					}
 				} else if (strings[0].equals("1")){ // 1 for booking
 					synchronized (syncString) {
-						if (dbOperator.book(strings[1], strings[7], tablename)) {
+						if (dbOperator.book(strings[1], strings[6], tablename)) {
 							printStream.println("booked");
 						} else {
 							printStream.println("failed");

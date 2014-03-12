@@ -133,7 +133,7 @@ class Handler extends Thread {
 				/*
 				 * the format of the incoming message is
 				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
-				 * *DepatingDate5*DepartingTime6*Class7*#
+				 * *DepatingDate5*Class6*#
 				 */
 				if (messageStrings[0].equals("0")) {
 					if (!messageStrings[2].equals("")) { // if it has a certain
