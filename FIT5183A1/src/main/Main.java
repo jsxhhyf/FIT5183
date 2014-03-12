@@ -27,41 +27,14 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		InetAddress address = null;
-		try {
-			address = InetAddress.getByName("localhost");
-			Util.debug(address.toString());
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String s = " * * ";
+//		s.replace("**", " * * ");
+		Util.debug(s);
+		String[] strings = s.split("\\*");
+		for (String string : strings) {
+			Util.debug(string);
 		}
-
-		Socket socket = null;
-		try {
-			socket = new Socket(address, PORT);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		InputStream in = null;
-		PrintStream out = null;
-		try {
-			in = socket.getInputStream();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(in));
-			out = new PrintStream(socket.getOutputStream());
-			// Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4*DepatingDate5*DepartingTime6*Class7*#
-			String string = "0***C_CITY1*A_CITY1*2014-03-01*#";
-			out.println(string);
-			String temp = null;
-			temp = reader.readLine();
-			Util.debug(temp);
-			out.println("BYE");
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
+		Util.debug(strings.length);
 	}
 
 }

@@ -97,7 +97,7 @@ class SocketHandler extends Thread {
 				 * *DepatingDate5*Class6*#
 				 */
 				if (strings[0].equals("0")) { // 0 for query
-					if (!strings[1].equals("")) {
+					if (!strings[1].equals(" ")) {
 						flightEntity = dbOperator.queryFlighByNo(strings[1],
 								tablename);
 						printStream.println(flightEntity.getSeatAvalible());

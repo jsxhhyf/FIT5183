@@ -136,7 +136,7 @@ class Handler extends Thread {
 				 * *DepatingDate5*Class6*#
 				 */
 				if (messageStrings[0].equals("0")) {
-					if (!messageStrings[2].equals("")) { // if it has a certain
+					if (!messageStrings[2].equals(" ")) { // if it has a certain
 															// airline
 						printer.println(forwardQuery(
 								Integer.valueOf(messageStrings[2]),

@@ -200,15 +200,13 @@ public class ClientGUI extends JFrame {
 
 	private class queryButtonHandler implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-//			String tempString = validateQueryInput();
-//			if (tempString != null) {
-//				client.query(tempString);
-//			}
-//			tempString = client.getResultString();
-			String[][] strings = {
-					{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }
-			};
-			fillTable(strings);
+			String tempString = validateQueryInput();
+			if (tempString != null) {
+				client.query(tempString);
+			}
+			tempString = client.getResultString();
+			
+//			fillTable(strings);
 		}
 	}
 
@@ -239,13 +237,13 @@ public class ClientGUI extends JFrame {
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
 			case "Airline1":
-				return "0*" + tempFlightNoString + "*1*****#";
+				return "0*" + tempFlightNoString + "*1* * * * *";
 			case "Airline2":
-				return "0*" + tempFlightNoString + "*2*****#";
+				return "0*" + tempFlightNoString + "*2* * * * *";
 			case "Airline3":
-				return "0*" + tempFlightNoString + "*3*****#";
+				return "0*" + tempFlightNoString + "*3* * * * *";
 			default:
-				return "0*" + tempFlightNoString + "*0*****#";
+				return "0*" + tempFlightNoString + "*0* * * * *";
 			}
 		} else if (!tempFlightNoString.equals("")
 				&& tempFlightNoString.length() != 6) {
@@ -264,21 +262,21 @@ public class ClientGUI extends JFrame {
 			}
 			switch (tempAirlineString) {
 			case "Airline1":
-				return "0**1*" + tempDepartingCityString
+				return "0* *1*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "**#";
+						+ "* *#";
 			case "Airline2":
-				return "0**2*" + tempDepartingCityString
+				return "0* *2*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "**#";
+						+ "* *#";
 			case "Airline3":
-				return "0**3*" + tempDepartingCityString
+				return "0* *3*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "**#";
+						+ "* *#";
 			default:
-				return "0**0*" + tempDepartingCityString
+				return "0* *0*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "**#";
+						+ "* *#";
 			}
 		} else {
 			return null;
