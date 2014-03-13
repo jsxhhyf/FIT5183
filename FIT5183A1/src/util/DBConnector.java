@@ -20,12 +20,13 @@ public class DBConnector {
 	public static void main(String[] args) { // for unit test
 		// TODO Auto-generated method stub
 		Connection c = connect(CONNECT_STRING);
-		ResultSet rs = query(c, "select * from Airline1 where FLNO = 'CA1820'");
+		ResultSet rs = query(c, "select * from Airline1 where FLNO = 'CA1220'");
 
 		try {
-			while (rs.next()) {
-				System.out.println(rs.getString("CLAS"));
+			if (!rs.next()) {
+				System.out.println("1111");
 			}
+			Util.debug(rs.getString("DPCT"));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

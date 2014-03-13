@@ -7,6 +7,8 @@
 package model;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import util.DBConnector;
 import util.Util;
@@ -69,11 +71,11 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return FlightEntity structure which represents the corresponding flight
 	 */
-	public FlightEntity queryFlighByNo(String flightNoString, String tableString) {
+	public ArrayList<FlightEntity> queryFlighByNo(String flightNoString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 
-		FlightEntity FlightEntity = null;
+		ArrayList<FlightEntity> flightEntities = null;
 		ResultSet resultSet = null;
 
 		if (flightNoString.length() != 6) { // validate the flight number
@@ -88,14 +90,25 @@ public class DB_Operator {
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
 					+ tableString + " where FLNO = '" + flightNoString + "'");
-			FlightEntity = transformToFlightEntity(resultSet);
+			try {
+				
+				if (!resultSet.next()) {
+					return null;
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			flightEntities = transformToFlightEntity(resultSet);
 			try {
 				connection.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return FlightEntity;
+			return flightEntities;
 		}
 	}
 
@@ -106,15 +119,17 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return the corresponding flight info
 	 */
-	public FlightEntity queryFlightByDept(String deptString, String tableString) {
+	public ArrayList<FlightEntity> queryFlightByDept(String deptString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-		FlightEntity FlightEntity = null;
+//		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ "where DPCT = '" + deptString + "'");
-		FlightEntity = transformToFlightEntity(resultSet);
+		if (resultSet == null) {
+			return null;
+		}
 
 		try {
 			connection.close();
@@ -122,7 +137,7 @@ public class DB_Operator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return FlightEntity;
+		return transformToFlightEntity(resultSet);
 	}
 
 	/**
@@ -133,17 +148,19 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return the corresponding flight info
 	 */
-	public FlightEntity queryFlightByLocation(String deptString,
+	public List<FlightEntity> queryFlightByLocation(String deptString,
 			String destString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-		FlightEntity FlightEntity = null;
+//		FlightEntity FlightEntity = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ "where DPCT = '" + deptString + "' and DSCT = '" + destString
 				+ "'");
-		FlightEntity = transformToFlightEntity(resultSet);
+		if (resultSet == null) {
+			return null;
+		}
 
 		try {
 			connection.close();
@@ -151,7 +168,7 @@ public class DB_Operator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return FlightEntity;
+		return transformToFlightEntity(resultSet);
 	}
 
 	/**
@@ -163,7 +180,7 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return the corresponding flight info
 	 */
-	public FlightEntity queryFlightByLocaAndDate(String deptString,
+	public ArrayList<FlightEntity> queryFlightByLocaAndDate(String deptString,
 			String destString, String dateString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
@@ -174,7 +191,9 @@ public class DB_Operator {
 				+ " where DPCT = '" + deptString + "' and DSCT = '"
 				+ destString + "' and TO_DAYS(DPDT) = TO_DAYS('" + dateString
 				+ "')");
-		FlightEntity = transformToFlightEntity(resultSet);
+		if (resultSet == null) {
+			return null;
+		}
 
 		try {
 			connection.close();
@@ -182,10 +201,10 @@ public class DB_Operator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return FlightEntity;
+		return transformToFlightEntity(resultSet);
 	}
 
-	public FlightEntity queryFlightByLocaAndDateAndTime(String deptString,
+	public ArrayList<FlightEntity> queryFlightByLocaAndDateAndTime(String deptString,
 			String destString, String dateString, String timeString1,
 			String timeString2, String tableString) {
 
@@ -207,7 +226,9 @@ public class DB_Operator {
 								+ timeString2
 								+ "') and UNIX_TIMESTAMP(CONCAT(DPDT,' ',DPTM)) > UNIX_TIMESTAMP('"
 								+ dateString + " " + timeString1 + "')");
-		FlightEntity = transformToFlightEntity(resultSet);
+		if (resultSet == null) {
+			return null;
+		}
 
 		try {
 			connection.close();
@@ -215,12 +236,12 @@ public class DB_Operator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return FlightEntity;
+		return transformToFlightEntity(resultSet);
 	}
 	
 	public boolean book(String flightNumer, String classString, String tableString) {
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-		int temp = queryFlighByNo(flightNumer, tableString).getSeatAvalible();
+		int temp = queryFlighByNo(flightNumer, tableString).get(0).getSeatAvalible();
 		temp--;
 		String updateString = "update " + tableString + " set SEAT = " + temp + " where FLNO = '" + flightNumer + "'";
 		int rows = DBConnector.update(connection, updateString);
@@ -243,35 +264,38 @@ public class DB_Operator {
 	 * @param rSet
 	 * @return a FlightEntity
 	 */
-	public FlightEntity transformToFlightEntity(ResultSet rSet) {
+	public ArrayList<FlightEntity> transformToFlightEntity(ResultSet rSet) {
 
-		FlightEntity f = new FlightEntity();
-		if (rSet == null) {
-			Util.debug("ResultSet is null during the transformation!");
-			return null;
-		}
+		ArrayList<FlightEntity> list = new ArrayList<FlightEntity>();
+		
 		try {
-			rSet.next(); // must add this, the cursor of ResultSet is before the
-							// first line initially
-			f.setFlightNumString(rSet.getString("FLNO"));
-			f.setDeptCityString(rSet.getString("DPCT"));
-			f.setDeptAirportString(rSet.getString("DPAP"));
-			f.setDestCityString(rSet.getString("DSCT"));
-			f.setDestAirportString(rSet.getString("DSAP"));
-			f.setDeptDate(rSet.getDate("DPDT"));
-			f.setArrvDate(rSet.getDate("ARDT"));
-			f.setDeptTime(rSet.getTime("DPTM"));
-			f.setArrvTime(rSet.getTime("ARTM"));
-			f.setSeatClass(rSet.getString("CLAS"));
-			f.setPriceBigDecimal(rSet.getBigDecimal("PRIC"));
-			f.setSeatAvalible(rSet.getInt("SEAT"));
-
+			do {
+				FlightEntity f = new FlightEntity();
+				f.setFlightNumString(rSet.getString("FLNO"));
+				
+				f.setDeptCityString(rSet.getString("DPCT"));
+				f.setDeptAirportString(rSet.getString("DPAP"));
+				f.setDestCityString(rSet.getString("DSCT"));
+				f.setDestAirportString(rSet.getString("DSAP"));
+				f.setDeptDate(rSet.getDate("DPDT"));
+				f.setArrvDate(rSet.getDate("ARDT"));
+				f.setDeptTime(rSet.getTime("DPTM"));
+				f.setArrvTime(rSet.getTime("ARTM"));
+				f.setSeatClass(rSet.getString("CLAS"));
+//				Util.debug(f.getSeatClass());
+				f.setPriceBigDecimal(rSet.getBigDecimal("PRIC"));
+				f.setSeatAvalible(rSet.getInt("SEAT"));
+				list.add(f);
+				//Util.debug(list.size());
+			} while (rSet.next());
+//			Util.debug(list.get(0).getSeatClass());
+//			Util.debug(list.get(1).getSeatClass());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return f;
+		return list;
 	}
 
 }

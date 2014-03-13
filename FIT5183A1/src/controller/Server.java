@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import model.DB_Operator;
 import model.FlightEntity;
@@ -19,7 +20,7 @@ import util.Util;
 
 /**
  * @author Phillip
- *
+ * 
  */
 public class Server {
 
@@ -28,13 +29,14 @@ public class Server {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String tablenameString = "airline" + args[0];
+//		String tablenameString = "airline" + args[0];
 		int PORT = 10010 + Integer.valueOf(args[0]);
-		
+
 		ServerSocket serverSocket = null;
 		try {
-			serverSocket=new ServerSocket(PORT);
-			Util.debug(PORT);Util.debug(serverSocket.getInetAddress().toString());
+			serverSocket = new ServerSocket(PORT);
+			Util.debug(PORT);
+			Util.debug(serverSocket.getInetAddress().toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +53,7 @@ public class Server {
 				e.printStackTrace();
 				continue;
 			}
-			new SocketHandler(incoming, tablenameString).start();
+			new SocketHandler(incoming, Integer.parseInt(args[0])).start();
 		}
 	}
 
@@ -59,29 +61,31 @@ public class Server {
 
 /**
  * @author Phillip
- *
+ * 
  */
 class SocketHandler extends Thread {
-	
-	String tablename = "";
+
+	int tablename = 0;
 	Socket incomingSocket;
 	DB_Operator dbOperator = new DB_Operator();
-	FlightEntity flightEntity = null;
-	
+	ArrayList<FlightEntity> flightEntities = null;
+
 	String syncString = new String();
-	
-	SocketHandler(Socket incoming, String tableName) {
+
+	SocketHandler(Socket incoming, int tableName) {
 		this.incomingSocket = incoming;
-		this.tablename = tableName;
+		this.tablename =tableName;
 		Util.debug(2);
 	}
-	
+
 	public void run() {
 		try {
-			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(incomingSocket.getInputStream()));
-			PrintStream printStream = new PrintStream(incomingSocket.getOutputStream());
-			
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					incomingSocket.getInputStream()));
+			PrintStream printStream = new PrintStream(
+					incomingSocket.getOutputStream());
+
 			while (true) {
 				Util.debug(3);
 				String messageString = reader.readLine();
@@ -94,34 +98,113 @@ class SocketHandler extends Thread {
 				/*
 				 * the format of the incoming message is
 				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
-				 * *DepatingDate5*Class6*#
+				 * *DepatingDate5*Class6*# 
+				 * 
+				 * the format of the response message is
+				 * FlightNo0*Airline1*DepartingCity2*DepartingAirport3
+				 * *DestinationCity4*ArrivingAirport5
+				 * *DepartingDate6*ArrivingDate7*
+				 * DepartingTime8*ArrivingTime9*Class10*Price11*AvalibleSeat12*#
 				 */
 				if (strings[0].equals("0")) { // 0 for query
 					if (!strings[1].equals(" ")) {
-						flightEntity = dbOperator.queryFlighByNo(strings[1],
-								tablename);
-						printStream.println(flightEntity.getSeatAvalible());
+						flightEntities = dbOperator.queryFlighByNo(strings[1],
+								"airline" + tablename);
+						if (flightEntities == null) {
+							Util.debug("no match");
+							printStream.println("$#");
+						} else {
+							for (FlightEntity flightEntity : flightEntities) {
+//								Util.debug(flightEntity.getSeatClass());
+								String flightInfo = flightEntity
+										.getFlightNumString()
+										+ "*"
+										+ "airline" + tablename
+										+ "*"
+										+ flightEntity.getDeptCityString()
+										+ "*"
+										+ flightEntity.getDeptAirportString()
+										+ "*"
+										+ flightEntity.getDestCityString()
+										+ "*"
+										+ flightEntity.getDestAirportString()
+										+ "*"
+										+ flightEntity.getDeptDate()
+										+ "*"
+										+ flightEntity.getArrvDate()
+										+ "*"
+										+ flightEntity.getDeptTime()
+										+ "*"
+										+ flightEntity.getArrvTime()
+										+ "*"
+										+ flightEntity.getSeatClass()
+										+ "*"
+										+ flightEntity.getPriceBigDecimal()
+										+ "*"
+										+ flightEntity.getSeatAvalible()
+										+ "*#";
+								printStream.print(flightInfo);
+							}
+							printStream.println();
+							
+						}
+
 					} else {
-						flightEntity = dbOperator.queryFlightByLocaAndDate(
-								strings[3], strings[4], strings[5], tablename);
-						printStream.println(flightEntity.getSeatAvalible());
+						flightEntities = dbOperator.queryFlightByLocaAndDate(
+								strings[3], strings[4], strings[5], "airline" + tablename);
+						if (flightEntities == null) {
+							Util.debug("not matched!");
+							printStream.println("$#");
+						} else {
+							for (FlightEntity flightEntity : flightEntities) {
+								String flightInfo = flightEntity
+										.getFlightNumString()
+										+ "*"
+										+ tablename
+										+ "*"
+										+ flightEntity.getDeptCityString()
+										+ "*"
+										+ flightEntity.getDeptAirportString()
+										+ "*"
+										+ flightEntity.getDestCityString()
+										+ "*"
+										+ flightEntity.getDestAirportString()
+										+ "*"
+										+ flightEntity.getDeptDate()
+										+ "*"
+										+ flightEntity.getArrvDate()
+										+ "*"
+										+ flightEntity.getDeptTime()
+										+ "*"
+										+ flightEntity.getArrvTime()
+										+ "*"
+										+ flightEntity.getSeatClass()
+										+ "*"
+										+ flightEntity.getPriceBigDecimal()
+										+ "*"
+										+ flightEntity.getSeatAvalible() + "*#";
+								printStream.print(flightInfo);
+							}
+							printStream.println();
+						}
+
 					}
-				} else if (strings[0].equals("1")){ // 1 for booking
+				} else if (strings[0].equals("1")) { // 1 for booking
 					synchronized (syncString) {
-						if (dbOperator.book(strings[1], strings[6], tablename)) {
+						if (dbOperator.book(strings[1], strings[6], "airline" + tablename)) {
 							printStream.println("booked");
 						} else {
 							printStream.println("failed");
 						}
 					}
 				}
-				
+
 			}
 			incomingSocket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }

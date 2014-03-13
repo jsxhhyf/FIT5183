@@ -92,8 +92,8 @@ class Handler extends Thread {
 
 			for (int i = 1; i <= 3; i++) {
 				outgoingSockets[i] = new Socket(SERVER_ADDRESS, SERVER_PORT[i - 1]);
-				Util.debug(SERVER_PORT[i-1]);
-				//outgoingSockets[1] = new Socket(SERVER_ADDRESS,10011);
+//				Util.debug(SERVER_PORT[i-1]);
+//				outgoingSockets[1] = new Socket(SERVER_ADDRESS,10011);
 				//
 				// printStream = new
 				// PrintStream(outgoingSockets[i].getOutputStream());
@@ -107,7 +107,7 @@ class Handler extends Thread {
 
 			printer = new PrintStream(incomingSocket.getOutputStream());
 
-			for (int i1 = 1; i1 <= 3; i1++) {
+			for (int i1 = 1; i1 <= 3; i1++) {                                                      //---------------
 				bufferedReaders[i1] = new BufferedReader(new InputStreamReader(
 						outgoingSockets[i1].getInputStream()));
 				printStreams[i1] = new PrintStream(
@@ -151,7 +151,7 @@ class Handler extends Thread {
 
 			}
 			incomingSocket.close();
-			for (int i = 1; i <= 3; i++) {
+			for (int i = 1; i <= 3; i++) {                                                          //----------------
 				printStreams[i].println("BYE");
 			}
 
@@ -172,6 +172,7 @@ class Handler extends Thread {
 			printStreams[i].println(msgString);
 			try {
 				tempString = bufferedReaders[i].readLine();
+				Util.debug(tempString);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -180,11 +181,10 @@ class Handler extends Thread {
 
 		} else {
 			String tempString = "";
-			for (int i1 = 1; i1 <= 3; i1++) {
+			for (int i1 = 1; i1 <= 3; i1++) {                                                              //--------
 				printStreams[i1].println(msgString);
 				try {
 					tempString += bufferedReaders[i1].readLine();
-					tempString += "*";
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -211,5 +211,12 @@ class Handler extends Thread {
 		}
 
 	}
+	
+//	public String insertAirline(int airline, String string) {
+//		StringBuffer stringBuffer = new StringBuffer(string);
+//		String inString = airline + "*";
+//		stringBuffer.insert(7, inString);
+//		return stringBuffer.toString();
+//	}
 
 }

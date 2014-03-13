@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.print.DocFlavor.STRING;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -34,7 +35,7 @@ import controller.Client;
  */
 public class ClientGUI extends JFrame {
 
-	private String[] columnName = { "FlightNumber", "DepartingCity",
+	private String[] columnName = { "FlightNumber", "Airline", "DepartingCity",
 			"Depart_Airport", "DestinationCity", "Dest_Airport",
 			"DepartingDate", "ArrivingDate", "DepartingTime", "ArrivingTime",
 			"Class", "Price", "AvaliableSeats" };
@@ -87,7 +88,7 @@ public class ClientGUI extends JFrame {
 
 	public ClientGUI() {
 
-		// client = new Client();
+		 client = new Client();
 
 		this.setTitle("MY FLIGHT BOOKING CENTRE");
 		this.setLayout(new BorderLayout());
@@ -205,8 +206,17 @@ public class ClientGUI extends JFrame {
 				client.query(tempString);
 			}
 			tempString = client.getResultString();
+			String[] rowStrings = tempString.split("#");
+			String[][] strings = new String[rowStrings.length][13];
+			int i = 0;
+			for(String row : rowStrings) {
+				strings[i] = row.split("\\*");
+				i++;
+				
+			}
 			
-//			fillTable(strings);
+			
+			fillTable(strings);
 		}
 	}
 
@@ -237,13 +247,13 @@ public class ClientGUI extends JFrame {
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
 			case "Airline1":
-				return "0*" + tempFlightNoString + "*1* * * * *";
+				return "0*" + tempFlightNoString + "*1*$*$*$*$*";
 			case "Airline2":
-				return "0*" + tempFlightNoString + "*2* * * * *";
+				return "0*" + tempFlightNoString + "*2*$*$*$*$*";
 			case "Airline3":
-				return "0*" + tempFlightNoString + "*3* * * * *";
+				return "0*" + tempFlightNoString + "*3*$*$*$*$*";
 			default:
-				return "0*" + tempFlightNoString + "*0* * * * *";
+				return "0*" + tempFlightNoString + "*0*$*$*$*$*";
 			}
 		} else if (!tempFlightNoString.equals("")
 				&& tempFlightNoString.length() != 6) {
@@ -262,21 +272,21 @@ public class ClientGUI extends JFrame {
 			}
 			switch (tempAirlineString) {
 			case "Airline1":
-				return "0* *1*" + tempDepartingCityString
+				return "0*$*1*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "* *#";
+						+ "*$*#";
 			case "Airline2":
-				return "0* *2*" + tempDepartingCityString
+				return "0*$*2*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "* *#";
+						+ "*$*#";
 			case "Airline3":
-				return "0* *3*" + tempDepartingCityString
+				return "0*$*3*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "* *#";
+						+ "*$*#";
 			default:
-				return "0* *0*" + tempDepartingCityString
+				return "0*$*0*" + tempDepartingCityString
 						+ tempDestinationCityString + tempDepartingDateString
-						+ "* *#";
+						+ "*$*#";
 			}
 		} else {
 			return null;
@@ -290,6 +300,9 @@ public class ClientGUI extends JFrame {
 		defaultTableModel.setRowCount(0);
 		
 		for (int i = 0; i < strings.length; i ++) {
+			if (strings[i][0].equals("$")) {
+				continue;
+			}
 			tableModel.addRow(strings[i]);
 		}
 		
