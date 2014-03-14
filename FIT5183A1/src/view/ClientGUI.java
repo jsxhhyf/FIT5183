@@ -44,10 +44,12 @@ public class ClientGUI extends JFrame {
 			columnName);
 	private String[] timeItems = { "00:00 - 06:00", "06:00 - 12:00",
 			"12:00 - 18:00", "18:00 - 24:00" };
-	private String[] classItems = { "ECO", "BUS", "FIR" };
+	private String[] classItems = { "ECO", "BUS", "FIR", "ALL" };
 	private String[] airlineItems = { "Airline1", "Airline2", "Airline3", "ALL" };
 	private String[] cityItems = { "C_CITY1", "C_CITY2", "C_CITY3", "C_CITY4",
-			"C_CITY5", "C_CITY6", "C_CITY7", "C_CITY8", "C_CITY9", "C_CITY10" };
+			"C_CITY5", "C_CITY6", "C_CITY7", "C_CITY8", "C_CITY9", "C_CITY10",
+			"A_CITY1", "A_CITY2", "A_CITY3", "A_CITY4", "A_CITY5", "A_CITY6",
+			"A_CITY7", "A_CITY8", "A_CITY9", "A_CITY10" };
 	private String[] yearItems = { "2014" };
 	private String[] monthItems = { "03" };
 
@@ -305,20 +307,20 @@ public class ClientGUI extends JFrame {
 			}
 			switch (tempAirlineString) {
 			case "Airline1":
-				return "0*$*1*" + tempDepartingCityString
-						+ tempDestinationCityString + tempDepartingDateString
+				return "0*$*1*" + tempDepartingCityString + "*"
+						+ tempDestinationCityString + "*" + tempDepartingDateString
 						+ "*$*#";
 			case "Airline2":
-				return "0*$*2*" + tempDepartingCityString
-						+ tempDestinationCityString + tempDepartingDateString
+				return "0*$*2*" + tempDepartingCityString + "*"
+						+ tempDestinationCityString + "*" + tempDepartingDateString
 						+ "*$*#";
 			case "Airline3":
-				return "0*$*3*" + tempDepartingCityString
-						+ tempDestinationCityString + tempDepartingDateString
+				return "0*$*3*" + tempDepartingCityString + "*"
+						+ tempDestinationCityString + "*" + tempDepartingDateString
 						+ "*$*#";
 			default:
-				return "0*$*0*" + tempDepartingCityString
-						+ tempDestinationCityString + tempDepartingDateString
+				return "0*$*0*" + tempDepartingCityString + "*"
+						+ tempDestinationCityString + "*" + tempDepartingDateString
 						+ "*$*#";
 			}
 		} else {

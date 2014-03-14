@@ -122,22 +122,27 @@ public class DB_Operator {
 	public ArrayList<FlightEntity> queryFlightByDept(String deptString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-//		FlightEntity FlightEntity = null;
+		ArrayList<FlightEntity> flightEntities = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ "where DPCT = '" + deptString + "'");
-		if (resultSet == null) {
-			return null;
+		try {
+			if (!resultSet.next()) {
+				return null;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
+		flightEntities = transformToFlightEntity(resultSet);
 		try {
 			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return transformToFlightEntity(resultSet);
+		return flightEntities;
 	}
 
 	/**
@@ -152,23 +157,28 @@ public class DB_Operator {
 			String destString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-//		FlightEntity FlightEntity = null;
+		ArrayList<FlightEntity> flightEntities = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ "where DPCT = '" + deptString + "' and DSCT = '" + destString
 				+ "'");
-		if (resultSet == null) {
-			return null;
+		try {
+			if (!resultSet.next()) {
+				return null;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
+		flightEntities = transformToFlightEntity(resultSet);
 		try {
 			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return transformToFlightEntity(resultSet);
+		return flightEntities;
 	}
 
 	/**
@@ -184,24 +194,31 @@ public class DB_Operator {
 			String destString, String dateString, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-		FlightEntity FlightEntity = null;
+		ArrayList<FlightEntity> flightEntities = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
 				+ " where DPCT = '" + deptString + "' and DSCT = '"
 				+ destString + "' and TO_DAYS(DPDT) = TO_DAYS('" + dateString
 				+ "')");
-		if (resultSet == null) {
-			return null;
+		try {
+			if (!resultSet.next()) {
+				return null;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
+		flightEntities = transformToFlightEntity(resultSet);
 		try {
 			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return transformToFlightEntity(resultSet);
+		
+		return flightEntities;
 	}
 
 	public ArrayList<FlightEntity> queryFlightByLocaAndDateAndTime(String deptString,
@@ -209,7 +226,7 @@ public class DB_Operator {
 			String timeString2, String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
-		FlightEntity FlightEntity = null;
+		ArrayList<FlightEntity> flightEntities = null;
 		ResultSet resultSet = null;
 
 		resultSet = DBConnector
@@ -226,24 +243,33 @@ public class DB_Operator {
 								+ timeString2
 								+ "') and UNIX_TIMESTAMP(CONCAT(DPDT,' ',DPTM)) > UNIX_TIMESTAMP('"
 								+ dateString + " " + timeString1 + "')");
-		if (resultSet == null) {
-			return null;
+		try {
+			if (!resultSet.next()) {
+				return null;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
+		flightEntities = transformToFlightEntity(resultSet);
 		try {
 			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return transformToFlightEntity(resultSet);
+		return flightEntities;
 	}
 	
 	public boolean book(String flightNumer, String classString, String tableString) {
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
 		int temp = queryFlighByNo(flightNumer, tableString).get(0).getSeatAvalible();
+		if (temp == 0) {
+			return false;
+		}
 		temp--;
 		String updateString = "update " + tableString + " set SEAT = " + temp + " where FLNO = '" + flightNumer + "'";
+		
 		int rows = DBConnector.update(connection, updateString);
 		try {
 			connection.close();

@@ -36,7 +36,7 @@ public class Server {
 		try {
 			serverSocket = new ServerSocket(PORT);
 			Util.debug(PORT);
-			Util.debug(serverSocket.getInetAddress().toString());
+			//Util.debug(serverSocket.getInetAddress().toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,8 +46,8 @@ public class Server {
 			Socket incoming = null;
 			try {
 				incoming = serverSocket.accept();
-				Util.debug(1);
-				Util.debug(incoming.getInetAddress().toString());
+				//Util.debug(1);
+				//Util.debug(incoming.getInetAddress().toString());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -107,7 +107,7 @@ class SocketHandler extends Thread {
 				 * DepartingTime8*ArrivingTime9*Class10*Price11*AvalibleSeat12*#
 				 */
 				if (strings[0].equals("0")) { // 0 for query
-					if (!strings[1].equals(" ")) {
+					if (!strings[1].equals("$")) {
 						flightEntities = dbOperator.queryFlighByNo(strings[1],
 								"airline" + tablename);
 						if (flightEntities == null) {
