@@ -46,6 +46,10 @@ public class ClientGUI extends JFrame {
 			"12:00 - 18:00", "18:00 - 24:00" };
 	private String[] classItems = { "ECO", "BUS", "FIR" };
 	private String[] airlineItems = { "Airline1", "Airline2", "Airline3", "ALL" };
+	private String[] cityItems = { "C_CITY1", "C_CITY2", "C_CITY3", "C_CITY4",
+			"C_CITY5", "C_CITY6", "C_CITY7", "C_CITY8", "C_CITY9", "C_CITY10" };
+	private String[] yearItems = { "2014" };
+	private String[] monthItems = { "03" };
 
 	private Client client;
 
@@ -58,12 +62,17 @@ public class ClientGUI extends JFrame {
 	private JLabel alJLabel;
 
 	private JTextField flJTextField;
-	private JTextField dpctJTextField;
-	private JTextField dsctJTextField;
-	private JTextField dpdtJTextField;
+	// private JTextField dpctJTextField;
+	// private JTextField dsctJTextField;
+	// private JTextField dpdtJTextField;
 	private JComboBox<String> timeJComboBox;
 	private JComboBox<String> classJComboBox;
 	private JComboBox<String> airlineJComboBox;
+	private JComboBox<String> dpctJComboBox;
+	private JComboBox<String> dsctJComboBox;
+	private JComboBox<String> dpyrJComboBox;
+	private JComboBox<String> dpmtJComboBox;
+	private JComboBox<String> dpdyJComboBox;
 
 	private JTable dataJTable;
 
@@ -88,7 +97,7 @@ public class ClientGUI extends JFrame {
 
 	public ClientGUI() {
 
-		 client = new Client();
+		client = new Client();
 
 		this.setTitle("MY FLIGHT BOOKING CENTRE");
 		this.setLayout(new BorderLayout());
@@ -105,13 +114,21 @@ public class ClientGUI extends JFrame {
 		alJLabel = new JLabel("Airline");
 
 		flJTextField = new JTextField(10);
-		dpdtJTextField = new JTextField(10);
-		dpctJTextField = new JTextField(10);
-		dsctJTextField = new JTextField(10);
+		// dpdtJTextField = new JTextField(10);
+		// dpctJTextField = new JTextField(10);
+		// dsctJTextField = new JTextField(10);
 
 		timeJComboBox = new JComboBox<String>(timeItems);
 		classJComboBox = new JComboBox<String>(classItems);
 		airlineJComboBox = new JComboBox<String>(airlineItems);
+		dpctJComboBox = new JComboBox<String>(cityItems);
+		dsctJComboBox = new JComboBox<String>(cityItems);
+		dpyrJComboBox = new JComboBox<String>(yearItems);
+		dpmtJComboBox = new JComboBox<String>(monthItems);
+		dpdyJComboBox = new JComboBox<String>();
+		for (int i = 1; i < 32; i++) {
+			dpdyJComboBox.addItem("" + i);
+		}
 
 		rightJPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -146,23 +163,32 @@ public class ClientGUI extends JFrame {
 		rightJPanel.add(dpdtJLabel, constraints);
 
 		constraints.gridx = 3;
-		rightJPanel.add(dpdtJTextField, constraints);
+		rightJPanel.add(dpyrJComboBox, constraints);
+
+		constraints.gridx = 4;
+		rightJPanel.add(dpmtJComboBox, constraints);
+
+		constraints.gridx = 5;
+		rightJPanel.add(dpdyJComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 1;
+		constraints.weightx = 1;
 		rightJPanel.add(dpctJLabel, constraints);
 
 		constraints.gridx = 1;
-		rightJPanel.add(dpctJTextField, constraints);
+		rightJPanel.add(dpctJComboBox, constraints);
 
 		constraints.gridx = 2;
 		rightJPanel.add(dsctJLabel, constraints);
 
 		constraints.gridx = 3;
-		rightJPanel.add(dsctJTextField, constraints);
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		rightJPanel.add(dsctJComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
+		constraints.gridwidth = 1;
 		rightJPanel.add(dptmJLabel, constraints);
 
 		constraints.gridx = 1;
@@ -172,10 +198,12 @@ public class ClientGUI extends JFrame {
 		rightJPanel.add(clJLabel, constraints);
 
 		constraints.gridx = 3;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		rightJPanel.add(classJComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 3;
+		constraints.gridwidth = 1;
 		rightJPanel.add(alJLabel, constraints);
 
 		constraints.gridx = 1;
@@ -183,10 +211,10 @@ public class ClientGUI extends JFrame {
 
 		constraints.gridx = 0;
 		constraints.gridy = 5;
-		constraints.gridwidth = 4;
+		constraints.gridwidth = 6;
 		constraints.gridheight = GridBagConstraints.REMAINDER;
 		constraints.weighty = 1;
-		constraints.insets = new Insets(20, 0, 0, 0);
+		constraints.insets = new Insets(155, 0, 0, 0);
 		rightJPanel.add(queryJButton, constraints);
 
 		this.add(leftJPanel, "Center");
@@ -209,13 +237,12 @@ public class ClientGUI extends JFrame {
 			String[] rowStrings = tempString.split("#");
 			String[][] strings = new String[rowStrings.length][13];
 			int i = 0;
-			for(String row : rowStrings) {
+			for (String row : rowStrings) {
 				strings[i] = row.split("\\*");
 				i++;
-				
+
 			}
-			
-			
+
 			fillTable(strings);
 		}
 	}
@@ -239,9 +266,15 @@ public class ClientGUI extends JFrame {
 		String tempFlightNoString = flJTextField.getText();
 		String tempAirlineString = airlineJComboBox.getSelectedItem()
 				.toString();
-		String tempDepartingCityString = dpctJTextField.getText();
-		String tempDestinationCityString = dsctJTextField.getText();
-		String tempDepartingDateString = dpdtJTextField.getText();
+		String tempDepartingCityString = dpctJComboBox.getSelectedItem()
+				.toString();
+		String tempDestinationCityString = dsctJComboBox.getSelectedItem()
+				.toString();
+		String tempDepartingDateString = dpyrJComboBox.getSelectedItem()
+				.toString()
+				+ "-"
+				+ dpmtJComboBox.getSelectedItem().toString()
+				+ "-" + dpdyJComboBox.getSelectedItem().toString();
 		classJComboBox.getSelectedItem().toString();
 
 		if (tempFlightNoString.length() == 6) {
@@ -294,18 +327,18 @@ public class ClientGUI extends JFrame {
 	}
 
 	public void fillTable(String[][] strings) {
-		
+
 		DefaultTableModel defaultTableModel = (DefaultTableModel) dataJTable
 				.getModel();
 		defaultTableModel.setRowCount(0);
-		
-		for (int i = 0; i < strings.length; i ++) {
+
+		for (int i = 0; i < strings.length; i++) {
 			if (strings[i][0].equals("$")) {
 				continue;
 			}
 			tableModel.addRow(strings[i]);
 		}
-		
+
 		dataJTable.updateUI();
 	}
 }
