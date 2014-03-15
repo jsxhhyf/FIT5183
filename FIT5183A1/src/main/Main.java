@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import util.Util;
 
@@ -29,6 +31,18 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
+		Util.debug(getCity2("FROMTO C_CITY1   jjfkk A_CITY1"));
+	}
+	
+	public static String getCity2(String string) {
+		Pattern datePattern = Pattern.compile("[AC]_CITY[0-9]");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			m.find();
+			return m.group(0);
+		} else {
+			return "$";
+		}
 	}
 
 	public void function() {

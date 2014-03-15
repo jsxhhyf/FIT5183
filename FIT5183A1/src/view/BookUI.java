@@ -60,18 +60,20 @@ public class BookUI extends JFrame {
 			columnNameStrings);
 
 	private String[] flightInfoStrings;
+	private String[] flightInfoStrings2;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		new BookUI("1", new Client());
+		new BookUI("1", "2", new Client());
 	}
 
-	public BookUI(String bookinfoString, Client client) {
+	public BookUI(String bookinfoString, String bookinfoString2, Client client) {
 
 		flightInfoStrings = bookinfoString.split("\\*");
+		flightInfoStrings2 = bookinfoString2.split("\\*");
 
 		this.client = client;
 
@@ -88,10 +90,9 @@ public class BookUI extends JFrame {
 		text2JLabel = new JLabel("Are you sure to book a flight from ");
 		text3JLabel = new JLabel();
 
-		text3JLabel.setText("from " + flightInfoStrings[2] + " to "
-				+ flightInfoStrings[4] + " on " + flightInfoStrings[6] + " "
-				+ flightInfoStrings[8] + " a " + flightInfoStrings[10]
-				+ " ticket, the price is " + flightInfoStrings[11] + " ?");
+		text3JLabel.setText(flightInfoStrings[2] + flightInfoStrings[3] + " "
+				+ " a " + flightInfoStrings[4]
+				+ " ticket, the price is " + flightInfoStrings[5] + " ?");
 
 		nameJTextField = new JTextField(10);
 		nameJTextField.setText("HuYifei");
@@ -120,6 +121,7 @@ public class BookUI extends JFrame {
 		c.gridwidth = 8;
 		c.gridheight = 5;
 		c.weightx = 2;
+		c.ipadx = 500;
 		this.add(jScrollPane, c);
 
 		c.gridx = 0;
@@ -127,6 +129,7 @@ public class BookUI extends JFrame {
 		c.weightx = 1;
 		c.gridwidth = 4;
 		c.gridheight = 1;
+		c.ipadx = 0;
 		c.insets = new Insets(100, 10, 20, 10);
 		this.add(text1JLabel, c);
 
@@ -164,7 +167,7 @@ public class BookUI extends JFrame {
 		this.add(text2JLabel, c);
 
 		c.gridy = 5;
-		c.gridwidth = 6;
+		c.gridwidth = 4;
 		c.insets = new Insets(0, 10, 20, 10);
 		this.add(text3JLabel, c);
 
@@ -182,6 +185,7 @@ public class BookUI extends JFrame {
 
 	private class confirmButtonHandler implements ActionListener {
 		private String resultString;
+		private String resultString2;
 
 		public void actionPerformed(ActionEvent event) {
 			if (!validateInfo()) {
@@ -191,47 +195,87 @@ public class BookUI extends JFrame {
 			switch (flightInfoStrings[1]) {
 			case "airline1":
 				client.query("1*" + flightInfoStrings[0] + "*"
-						+  "1*" + flightInfoStrings[6] + "*"
-						+ flightInfoStrings[10]);
+						+  "1*" + getDate1(flightInfoStrings[3]) + "*"
+						+ flightInfoStrings[4]);
 				break;
 			case "airline2":
 				client.query("1*" + flightInfoStrings[0] + "*"
-						+  "2*" + flightInfoStrings[6] + "*"
-						+ flightInfoStrings[10]);
+						+  "2*" + getDate1(flightInfoStrings[3]) + "*"
+						+ flightInfoStrings[4]);
 				break;
 			
 			case "airline3":
 				client.query("1*" + flightInfoStrings[0] + "*"
-						+  "3*" + flightInfoStrings[6] + "*"
-						+ flightInfoStrings[10]);
+						+  "3*" +  getDate1(flightInfoStrings[3]) + "*"
+						+ flightInfoStrings[4]);
 				break;
 			default:
 				break;
 			}
 			
 			resultString = client.getResultString();
+			
+			switch (flightInfoStrings2[1]) {
+			case "airline1":
+				client.query("1*" + flightInfoStrings2[0] + "*"
+						+  "1*" + getDate1(flightInfoStrings2[3]) + "*"
+						+ flightInfoStrings2[4]);
+				break;
+			case "airline2":
+				client.query("1*" + flightInfoStrings2[0] + "*"
+						+  "2*" + getDate1(flightInfoStrings2[3]) + "*"
+						+ flightInfoStrings2[4]);
+				break;
+			
+			case "airline3":
+				client.query("1*" + flightInfoStrings2[0] + "*"
+						+  "3*" +  getDate1(flightInfoStrings2[3]) + "*"
+						+ flightInfoStrings2[4]);
+				break;
+			default:
+				break;
+			}
+			resultString2 = client.getResultString();
+			
 			if (resultString.equals("false")) {
 				JOptionPane.showMessageDialog(null,
 						"Oops... Booking failed!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			} else {
-				String[][] strings = new String[5][4];
-				strings[0][0] = flightInfoStrings[2];
+				String[][] strings = new String[11][4];
+				strings[0][0] = getCity1(flightInfoStrings[2]);
 				strings[0][1] = flightInfoStrings[1];
-				strings[0][2] = flightInfoStrings[4];
+				strings[0][2] = getCity2(flightInfoStrings[2]);
 				strings[0][3] = nameJTextField.getText();
 				strings[1][0] = "Terminal 2";
 				strings[1][1] = flightInfoStrings[0];
 				strings[1][2] = "Terminal 1";
 				strings[1][3] = phoneJTextField.getText();
-				strings[2][0] = flightInfoStrings[3];
-				strings[2][1] = flightInfoStrings[10];
-				strings[2][2] = flightInfoStrings[5];
-				strings[2][3] = flightInfoStrings[11];
-				strings[3][0] = flightInfoStrings[6];
-				strings[3][2] = flightInfoStrings[7];
-				strings[4][0] = flightInfoStrings[8];
-				strings[4][2] = flightInfoStrings[9];
+				strings[2][0] = "need to do";
+				strings[2][1] = flightInfoStrings[4];
+				strings[2][2] = "need to do";
+				strings[2][3] = "Price is :¡¡" + flightInfoStrings[5];
+				strings[3][0] = getDate1(flightInfoStrings[3]);
+				strings[3][2] = getDate2(flightInfoStrings[3]);
+				strings[4][0] = "time";
+				strings[4][2] = "time";
+				
+				strings[6][0] = getCity1(flightInfoStrings2[2]);
+				strings[6][1] = flightInfoStrings2[1];
+				strings[6][2] = getCity2(flightInfoStrings2[2]);
+				strings[6][3] = nameJTextField.getText();
+				strings[7][0] = "Terminal 2";
+				strings[7][1] = flightInfoStrings2[0];
+				strings[7][2] = "Terminal 1";
+				strings[7][3] = phoneJTextField.getText();
+				strings[8][0] = "need to do";
+				strings[8][1] = flightInfoStrings2[4];
+				strings[8][2] = "need to do";
+				strings[8][3] = "Price is :¡¡" + flightInfoStrings2[5];
+				strings[9][0] = getDate1(flightInfoStrings2[3]);
+				strings[9][2] = getDate2(flightInfoStrings2[3]);
+				strings[10][0] = "time";
+				strings[10][2] = "time";
 				
 				fillTable(strings);
 			}
@@ -280,5 +324,47 @@ public class BookUI extends JFrame {
 			return true;
 		}
 		
+	}
+	
+	public String getDate1(String string) {
+		Pattern datePattern = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+	
+	public String getDate2(String string) {
+		Pattern datePattern = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			m.find();
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+	
+	public String getCity1(String string) {
+		Pattern datePattern = Pattern.compile("[AC]_CITY[0-9]");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+	
+	public String getCity2(String string) {
+		Pattern datePattern = Pattern.compile("[AC]_CITY[0-9]");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			m.find();
+			return m.group(0);
+		} else {
+			return "$";
+		}
 	}
 }
