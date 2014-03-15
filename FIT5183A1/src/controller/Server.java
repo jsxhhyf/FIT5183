@@ -29,14 +29,14 @@ public class Server {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-//		String tablenameString = "airline" + args[0];
+		// String tablenameString = "airline" + args[0];
 		int PORT = 10010 + Integer.valueOf(args[0]);
 
 		ServerSocket serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(PORT);
 			Util.debug(PORT);
-			//Util.debug(serverSocket.getInetAddress().toString());
+			// Util.debug(serverSocket.getInetAddress().toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,8 +46,8 @@ public class Server {
 			Socket incoming = null;
 			try {
 				incoming = serverSocket.accept();
-				//Util.debug(1);
-				//Util.debug(incoming.getInetAddress().toString());
+				// Util.debug(1);
+				// Util.debug(incoming.getInetAddress().toString());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -65,7 +65,6 @@ public class Server {
  */
 class SocketHandler extends Thread {
 
-	
 	int tablename = 0;
 	Socket incomingSocket;
 	DB_Operator dbOperator = new DB_Operator();
@@ -75,8 +74,8 @@ class SocketHandler extends Thread {
 
 	SocketHandler(Socket incoming, int tableName) {
 		this.incomingSocket = incoming;
-		this.tablename =tableName;
-//		Util.debug(2);
+		this.tablename = tableName;
+		// Util.debug(2);
 	}
 
 	public void run() {
@@ -88,7 +87,7 @@ class SocketHandler extends Thread {
 					incomingSocket.getOutputStream());
 
 			while (true) {
-//				Util.debug(3);
+				// Util.debug(3);
 				String messageString = reader.readLine();
 				Util.debug(messageString);
 
@@ -99,7 +98,7 @@ class SocketHandler extends Thread {
 				/*
 				 * the format of the incoming message is
 				 * Operation0*FlightNo1*Airline2*DepatingCity3*DestinationCity4
-				 * *DepatingDate5*Class6*# 
+				 * *DepatingDate5*Class6*#
 				 * 
 				 * the format of the response message is
 				 * FlightNo0*Airline1*DepartingCity2*DepartingAirport3
@@ -109,18 +108,30 @@ class SocketHandler extends Thread {
 				 */
 				if (strings[0].equals("0")) { // 0 for query
 					if (!strings[1].equals("$")) {
-						flightEntities = dbOperator.queryFlighByNo(strings[1],
-								"airline" + tablename);
+						switch (strings[6]) {
+						case "ALL":
+							flightEntities = dbOperator.queryFlightByNo(
+									strings[1], "airline" + tablename);
+							break;
+
+						default:
+							flightEntities = dbOperator
+									.queryFlightByNoAndClass(strings[1],
+											strings[6], "airline" + tablename);
+							break;
+						}
+
 						if (flightEntities == null) {
 							Util.debug("no match");
 							printStream.println("$#");
 						} else {
 							for (FlightEntity flightEntity : flightEntities) {
-//								Util.debug(flightEntity.getSeatClass());
+								// Util.debug(flightEntity.getSeatClass());
 								String flightInfo = flightEntity
 										.getFlightNumString()
 										+ "*"
-										+ "airline" + tablename
+										+ "airline"
+										+ tablename
 										+ "*"
 										+ flightEntity.getDeptCityString()
 										+ "*"
@@ -147,12 +158,14 @@ class SocketHandler extends Thread {
 								printStream.print(flightInfo);
 							}
 							printStream.println();
-							
+
 						}
 
 					} else {
+
 						flightEntities = dbOperator.queryFlightByLocaAndDate(
-								strings[3], strings[4], strings[5], "airline" + tablename);
+								strings[3], strings[4], strings[5], "airline"
+										+ tablename);
 						if (flightEntities == null) {
 							Util.debug("not matched!");
 							printStream.println("$#");
@@ -183,7 +196,8 @@ class SocketHandler extends Thread {
 										+ "*"
 										+ flightEntity.getPriceBigDecimal()
 										+ "*"
-										+ flightEntity.getSeatAvalible() + "*#";
+										+ flightEntity.getSeatAvalible()
+										+ "*#";
 								printStream.print(flightInfo);
 							}
 							printStream.println();
@@ -193,7 +207,8 @@ class SocketHandler extends Thread {
 				} else if (strings[0].equals("1")) { // 1 for booking
 					synchronized (syncString) {
 						Util.debug("Server get book request");
-						if (dbOperator.book(strings[1], strings[3], strings[4], "airline" + tablename)) {
+						if (dbOperator.book(strings[1], strings[3], strings[4],
+								"airline" + tablename)) {
 							printStream.println("booked");
 							Util.debug("book successful!(run)");
 						} else {

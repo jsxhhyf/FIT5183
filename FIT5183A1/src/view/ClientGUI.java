@@ -44,10 +44,10 @@ public class ClientGUI extends JFrame {
 	private Object[][] cellData = null;
 	private DefaultTableModel tableModel = new DefaultTableModel(cellData,
 			columnName);
-	private String[] timeItems = { "00:00 - 06:00", "06:00 - 12:00",
+	private String[] timeItems = { "ALL", "00:00 - 06:00", "06:00 - 12:00",
 			"12:00 - 18:00", "18:00 - 24:00" };
-	private String[] classItems = { "ECO", "BUS", "FIR", "ALL" };
-	private String[] airlineItems = { "Airline1", "Airline2", "Airline3", "ALL" };
+	private String[] classItems = { "ALL", "ECO", "BUS", "FIR" };
+	private String[] airlineItems = { "ALL", "Airline1", "Airline2", "Airline3" };
 	private String[] cityItems = { "C_CITY1", "C_CITY2", "C_CITY3", "C_CITY4",
 			"C_CITY5", "C_CITY6", "C_CITY7", "C_CITY8", "C_CITY9", "C_CITY10",
 			"A_CITY1", "A_CITY2", "A_CITY3", "A_CITY4", "A_CITY5", "A_CITY6",
@@ -303,18 +303,18 @@ public class ClientGUI extends JFrame {
 				+ "-"
 				+ dpmtJComboBox.getSelectedItem().toString()
 				+ "-" + dpdyJComboBox.getSelectedItem().toString();
-		classJComboBox.getSelectedItem().toString();
+		String classString = classJComboBox.getSelectedItem().toString();
 
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
 			case "Airline1":
-				return "0*" + tempFlightNoString + "*1*$*$*$*$*";
+				return "0*" + tempFlightNoString + "*1*$*$*$*" + classString + "*#";
 			case "Airline2":
-				return "0*" + tempFlightNoString + "*2*$*$*$*$*";
+				return "0*" + tempFlightNoString + "*2*$*$*$*" + classString + "*#";
 			case "Airline3":
-				return "0*" + tempFlightNoString + "*3*$*$*$*$*";
+				return "0*" + tempFlightNoString + "*3*$*$*$*" + classString + "*#";
 			default:
-				return "0*" + tempFlightNoString + "*0*$*$*$*$*";
+				return "0*" + tempFlightNoString + "*0*$*$*$*" + classString + "*#";
 			}
 		} else if (!tempFlightNoString.equals("")
 				&& tempFlightNoString.length() != 6) {
@@ -335,19 +335,19 @@ public class ClientGUI extends JFrame {
 			case "Airline1":
 				return "0*$*1*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
-						+ tempDepartingDateString + "*$*#";
+						+ tempDepartingDateString + "*" + classString + "*#";
 			case "Airline2":
 				return "0*$*2*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
-						+ tempDepartingDateString + "*$*#";
+						+ tempDepartingDateString + "*" + classString + "*#";
 			case "Airline3":
 				return "0*$*3*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
-						+ tempDepartingDateString + "*$*#";
+						+ tempDepartingDateString + "*" + classString + "*#";
 			default:
 				return "0*$*0*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
-						+ tempDepartingDateString + "*$*#";
+						+ tempDepartingDateString + "*$" + classString + "*#";
 			}
 		} else {
 			return null;

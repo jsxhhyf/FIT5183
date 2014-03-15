@@ -72,7 +72,7 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return FlightEntity structure which represents the corresponding flight
 	 */
-	public ArrayList<FlightEntity> queryFlighByNo(String flightNoString,
+	public ArrayList<FlightEntity> queryFlightByNo(String flightNoString,
 			String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
@@ -92,6 +92,48 @@ public class DB_Operator {
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
 					+ tableString + " where FLNO = '" + flightNoString + "'");
+			try {
+
+				if (!resultSet.next()) {
+					return null;
+				}
+
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			flightEntities = transformToFlightEntity(resultSet);
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return flightEntities;
+		}
+	}
+	
+	public ArrayList<FlightEntity> queryFlightByNoAndClass(String flightNoString, String classString, 
+			String tableString) {
+
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
+
+		ArrayList<FlightEntity> flightEntities = null;
+		ResultSet resultSet = null;
+
+		if (flightNoString.length() != 6) { // validate the flight number
+			Util.debug("Wrong format of flight number!");
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		} else {
+			resultSet = DBConnector.query(connection, QUERY_STRING
+					+ tableString + " where FLNO = '" + flightNoString + "' and CLAS = '" + classString + "'");
 			try {
 
 				if (!resultSet.next()) {
