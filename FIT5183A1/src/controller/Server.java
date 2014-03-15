@@ -65,12 +65,13 @@ public class Server {
  */
 class SocketHandler extends Thread {
 
+	
 	int tablename = 0;
 	Socket incomingSocket;
 	DB_Operator dbOperator = new DB_Operator();
 	ArrayList<FlightEntity> flightEntities = null;
 
-	String syncString = new String();
+	static String syncString = new String();
 
 	SocketHandler(Socket incoming, int tableName) {
 		this.incomingSocket = incoming;

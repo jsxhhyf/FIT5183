@@ -44,6 +44,7 @@ public class Broker {
 			Socket incoming = null;
 			try {
 				incoming = serverSocket.accept();
+				Util.debug("new request arrives");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

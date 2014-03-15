@@ -22,17 +22,29 @@ import util.Util;
  * 
  */
 public class BrokerTest {
-	public static final int PORT = 10010;
+//	public static final int PORT = 10010;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
+		for(int i = 0; i < 10; i++) {
+			new MultiThread().start();
+		}
+	}
+
+}
+
+class MultiThread extends Thread {
+	final int PORT = 10010;
+	public void run() {
+		Util.debug(Thread.currentThread().getName() + " starting...");
 		InetAddress address = null;
 		try {
 			address = InetAddress.getByName("localhost");
-			Util.debug(address.toString());
+//			Util.debug(address.toString());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,15 +69,16 @@ public class BrokerTest {
 			// DestinationCity4*DepatingDate5*Class6*#
 			//String string = "1*CA1220*1*C_CITY1*A_CITY1*2014-03-01*$*FIR*#";
 			String string = "1*CA1220*1*2014-03-01*FIR*#";
+			Util.debug(Thread.currentThread().getName() + " ready to send request");
 			out.println(string);
+			Util.debug(Thread.currentThread().getName() + " request sent");
 			String temp = null;
 			temp = reader.readLine();
-			Util.debug(temp);
+			Util.debug(Thread.currentThread().getName() + " " + temp);
 			out.println("BYE");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
 	}
-
 }
