@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import util.Util;
 
@@ -30,4 +31,15 @@ public class Main {
 		
 	}
 
+	public void function() {
+		System.out.println("«Î ‰»Î£∫");
+		boolean flag = false;
+		int a = 0;
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+			a = scanner.nextInt();
+		}
+		
+		
+	}
 }

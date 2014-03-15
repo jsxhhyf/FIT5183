@@ -136,6 +136,7 @@ class Handler extends Thread {
 				 * *DepatingDate5*Class6*#
 				 */
 				if (messageStrings[0].equals("0")) {
+					Util.debug("准备调用forwardQuery");
 					if (!messageStrings[2].equals(" ")) { // if it has a certain
 															// airline
 						printer.println(forwardQuery(
@@ -145,6 +146,7 @@ class Handler extends Thread {
 						printer.println(forwardQuery(0, incomingString));
 					}
 				} else if (messageStrings[0].equals("1")) {
+					Util.debug("准备调用forwardUpdate");
 					printer.println(forwardUpdate(
 							Integer.valueOf(messageStrings[2]), incomingString));
 				}
@@ -172,7 +174,7 @@ class Handler extends Thread {
 			printStreams[i].println(msgString);
 			try {
 				tempString = bufferedReaders[i].readLine();
-				Util.debug(tempString);
+				Util.debug("从服务器返回的结果(forwardQuery)" + tempString);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -205,6 +207,7 @@ class Handler extends Thread {
 			e.printStackTrace();
 		}
 		if (tempString.equals("booked")) {
+			Util.debug("book successful (forwardUpdate" );
 			return true;
 		} else {
 			return false;

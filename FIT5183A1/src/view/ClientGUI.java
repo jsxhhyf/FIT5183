@@ -21,12 +21,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import util.Util;
 import controller.Client;
 
 /**
@@ -116,6 +118,7 @@ public class ClientGUI extends JFrame {
 		alJLabel = new JLabel("Airline");
 
 		flJTextField = new JTextField(10);
+		flJTextField.setText("CA1220");
 		// dpdtJTextField = new JTextField(10);
 		// dpctJTextField = new JTextField(10);
 		// dsctJTextField = new JTextField(10);
@@ -236,6 +239,9 @@ public class ClientGUI extends JFrame {
 				client.query(tempString);
 			}
 			tempString = client.getResultString();
+			
+			Util.debug("从client返回的查询结果:" + tempString);
+			
 			String[] rowStrings = tempString.split("#");
 			String[][] strings = new String[rowStrings.length][13];
 			int i = 0;
@@ -250,8 +256,28 @@ public class ClientGUI extends JFrame {
 	}
 
 	private class bookButtonHandler implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+		private String flightEntry = "";
 
+		public void actionPerformed(ActionEvent event) {
+			if (dataJTable.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(null,
+						"Please select the flight you want to book", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			for (int i = 0; i < 13; i++) {
+				
+				flightEntry += dataJTable.getValueAt(dataJTable.getSelectedRow(), i);
+				flightEntry += "*";
+				
+				Util.debug("第" + i + "格" + dataJTable.getValueAt(dataJTable.getSelectedRow(), i));
+				
+			}
+			
+			Util.debug(flightEntry);
+			
+			BookUI bookUI = new BookUI(flightEntry, client);
+			
 		}
 	}
 
@@ -308,20 +334,20 @@ public class ClientGUI extends JFrame {
 			switch (tempAirlineString) {
 			case "Airline1":
 				return "0*$*1*" + tempDepartingCityString + "*"
-						+ tempDestinationCityString + "*" + tempDepartingDateString
-						+ "*$*#";
+						+ tempDestinationCityString + "*"
+						+ tempDepartingDateString + "*$*#";
 			case "Airline2":
 				return "0*$*2*" + tempDepartingCityString + "*"
-						+ tempDestinationCityString + "*" + tempDepartingDateString
-						+ "*$*#";
+						+ tempDestinationCityString + "*"
+						+ tempDepartingDateString + "*$*#";
 			case "Airline3":
 				return "0*$*3*" + tempDepartingCityString + "*"
-						+ tempDestinationCityString + "*" + tempDepartingDateString
-						+ "*$*#";
+						+ tempDestinationCityString + "*"
+						+ tempDepartingDateString + "*$*#";
 			default:
 				return "0*$*0*" + tempDepartingCityString + "*"
-						+ tempDestinationCityString + "*" + tempDepartingDateString
-						+ "*$*#";
+						+ tempDestinationCityString + "*"
+						+ tempDepartingDateString + "*$*#";
 			}
 		} else {
 			return null;

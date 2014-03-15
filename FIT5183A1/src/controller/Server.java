@@ -75,7 +75,7 @@ class SocketHandler extends Thread {
 	SocketHandler(Socket incoming, int tableName) {
 		this.incomingSocket = incoming;
 		this.tablename =tableName;
-		Util.debug(2);
+//		Util.debug(2);
 	}
 
 	public void run() {
@@ -87,7 +87,7 @@ class SocketHandler extends Thread {
 					incomingSocket.getOutputStream());
 
 			while (true) {
-				Util.debug(3);
+//				Util.debug(3);
 				String messageString = reader.readLine();
 				Util.debug(messageString);
 
@@ -191,8 +191,10 @@ class SocketHandler extends Thread {
 					}
 				} else if (strings[0].equals("1")) { // 1 for booking
 					synchronized (syncString) {
-						if (dbOperator.book(strings[1], strings[6], "airline" + tablename)) {
+						Util.debug("Server get book request");
+						if (dbOperator.book(strings[1], strings[3], strings[4], "airline" + tablename)) {
 							printStream.println("booked");
+							Util.debug("book successful!(run)");
 						} else {
 							printStream.println("failed");
 						}
