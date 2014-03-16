@@ -41,6 +41,8 @@ public class BookUI extends JFrame {
 	private JLabel text1JLabel;
 	private JLabel text2JLabel;
 	private JLabel text3JLabel;
+	private JLabel text4JLabel;
+	private JLabel text5JLabel;
 	private JLabel myJLabel;
 
 	private JTextField nameJTextField;
@@ -87,12 +89,17 @@ public class BookUI extends JFrame {
 		emailJLabel = new JLabel("E-mail");
 		creditJLabel = new JLabel("Credit");
 		text1JLabel = new JLabel("Please input your personal information:");
-		text2JLabel = new JLabel("Are you sure to book a flight from ");
+		text2JLabel = new JLabel("Are you sure to book a flight " + flightInfoStrings[2]);
 		text3JLabel = new JLabel();
 
-		text3JLabel.setText(flightInfoStrings[2] + flightInfoStrings[3] + " "
+		text3JLabel.setText(flightInfoStrings[3] + " "
 				+ " a " + flightInfoStrings[4] + " ticket, the price is "
-				+ flightInfoStrings[5] + " ?");
+				+ flightInfoStrings[5]);
+		text4JLabel = new JLabel("And a flight " + flightInfoStrings2[2]);
+		text5JLabel = new JLabel();
+		text5JLabel.setText(flightInfoStrings2[3] + " "
+				+ " a " + flightInfoStrings2[4] + " ticket, the price is "
+				+ flightInfoStrings2[5] + " ?");
 
 		nameJTextField = new JTextField(10);
 		nameJTextField.setText("HuYifei");
@@ -103,7 +110,11 @@ public class BookUI extends JFrame {
 		creditJTextField = new JTextField(10);
 		creditJTextField.setText("0123456789012345");
 
-		ticketJTable = new JTable(tableModel);
+		ticketJTable = new JTable(tableModel){
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		jScrollPane = new JScrollPane(ticketJTable);
 
 		confirmJButton = new JButton("Confirm!");
@@ -119,7 +130,7 @@ public class BookUI extends JFrame {
 
 		c.gridx = 4;
 		c.gridwidth = 8;
-		c.gridheight = 5;
+		c.gridheight = 8;
 		c.weightx = 2;
 		c.ipadx = 500;
 		this.add(jScrollPane, c);
@@ -130,7 +141,7 @@ public class BookUI extends JFrame {
 		c.gridwidth = 4;
 		c.gridheight = 1;
 		c.ipadx = 0;
-		c.insets = new Insets(100, 10, 20, 10);
+		c.insets = new Insets(70, 10, 20, 10);
 		this.add(text1JLabel, c);
 
 		c.gridy = 2;
@@ -142,9 +153,13 @@ public class BookUI extends JFrame {
 		this.add(nameJTextField, c);
 
 		c.gridx = 2;
+		c.insets = new Insets(20, 20, 20, 10);
+		c.fill = GridBagConstraints.EAST;
 		this.add(phoneJLabel, c);
 
 		c.gridx = 3;
+		c.insets = new Insets(20, 10, 20, 10);
+		c.fill = GridBagConstraints.BOTH;
 		this.add(phoneJTextField, c);
 
 		c.gridx = 0;
@@ -155,9 +170,13 @@ public class BookUI extends JFrame {
 		this.add(emailJTextField, c);
 
 		c.gridx = 2;
+		c.insets = new Insets(20, 20, 20, 10);
+		c.fill = GridBagConstraints.EAST;
 		this.add(creditJLabel, c);
 
 		c.gridx = 3;
+		c.insets = new Insets(20, 10, 20, 10);
+		c.fill = GridBagConstraints.BOTH;
 		this.add(creditJTextField, c);
 
 		c.gridx = 0;
@@ -168,10 +187,20 @@ public class BookUI extends JFrame {
 
 		c.gridy = 5;
 		c.gridwidth = 4;
-		c.insets = new Insets(0, 10, 20, 10);
+		c.insets = new Insets(0, 10, 0, 10);
 		this.add(text3JLabel, c);
-
+		
 		c.gridy = 6;
+		c.gridwidth = 4;
+		c.insets = new Insets(0, 10, 0, 10);
+		this.add(text4JLabel, c);
+		
+		c.gridy = 7;
+		c.gridwidth = 4;
+		c.insets = new Insets(0, 10, 20, 10);
+		this.add(text5JLabel, c);
+
+		c.gridy = 8;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(20, 10, 20, 10);
@@ -277,6 +306,8 @@ public class BookUI extends JFrame {
 				strings[10][2] = getTime2(flightInfoStrings2[3]);
 
 				fillTable(strings);
+				JOptionPane.showMessageDialog(null, "Tickets booked!",
+						"Info", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 	}

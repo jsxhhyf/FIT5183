@@ -138,8 +138,8 @@ public class ClientGUI extends JFrame {
 
 		flJTextField = new JTextField(10);
 		fl2JTextField = new JTextField(10);
-		flJTextField.setText("CA1220");
-		fl2JTextField.setText("AC1000");
+//		flJTextField.setText("CA1220");
+//		fl2JTextField.setText("AC1000");
 		// dpdtJTextField = new JTextField(10);
 		// dpctJTextField = new JTextField(10);
 		// dsctJTextField = new JTextField(10);
@@ -172,7 +172,11 @@ public class ClientGUI extends JFrame {
 		leftJPanel.setVisible(true);
 		// leftUpJPanel.setVisible(true);
 
-		dataJTable = new JTable(tableModel);
+		dataJTable = new JTable(tableModel){
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		dataJTable.setRowHeight(30);
 		TableColumnModel tcm = dataJTable.getColumnModel();
 		TableColumn tc = tcm.getColumn(2);
@@ -181,7 +185,11 @@ public class ClientGUI extends JFrame {
 		tc.setCellRenderer(new TextAreaCellRenderer());
 		jScrollPane = new JScrollPane(dataJTable);
 
-		data2JTable = new JTable(tableModel2);
+		data2JTable = new JTable(tableModel2) {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		data2JTable.setRowHeight(30);
 		TableColumnModel tcm2 = data2JTable.getColumnModel();
 		TableColumn tc2 = tcm2.getColumn(2);
