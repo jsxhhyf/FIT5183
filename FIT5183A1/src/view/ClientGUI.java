@@ -528,7 +528,7 @@ public class ClientGUI extends JFrame {
 			default:
 				return "0*$*0*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
-						+ tempDepartingDateString + "*$" + classString + "*#";
+						+ tempDepartingDateString + "*" + classString + "*#";
 			}
 		} else {
 			return null;
@@ -551,7 +551,7 @@ public class ClientGUI extends JFrame {
 				+ "-"
 				+ bcmtJComboBox.getSelectedItem().toString()
 				+ "-" + bcdyJComboBox.getSelectedItem().toString();
-		String classString = classJComboBox.getSelectedItem().toString();
+		String classString = class2JComboBox.getSelectedItem().toString();
 
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
@@ -599,7 +599,7 @@ public class ClientGUI extends JFrame {
 			default:
 				return "0*$*0*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
-						+ tempDepartingDateString + "*$" + classString + "*#";
+						+ tempDepartingDateString + "*" + classString + "*#";
 			}
 		} else {
 			return null;

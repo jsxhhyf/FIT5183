@@ -162,10 +162,16 @@ class SocketHandler extends Thread {
 						}
 
 					} else {
-
-						flightEntities = dbOperator.queryFlightByLocaAndDate(
-								strings[3], strings[4], strings[5], "airline"
+						if (strings[6].equals("ALL")) {
+							flightEntities = dbOperator.queryFlightByLocaAndDate(
+									strings[3], strings[4], strings[5], "airline"
+											+ tablename);
+						} else {
+							flightEntities = dbOperator.queryByLocaAndDateAndClass(
+								strings[3], strings[4], strings[5], strings[6], "airline"
 										+ tablename);
+						}
+						
 						if (flightEntities == null) {
 							Util.debug("not matched!");
 							printStream.println("$#");

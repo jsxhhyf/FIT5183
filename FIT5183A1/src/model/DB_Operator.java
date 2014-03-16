@@ -332,6 +332,33 @@ public class DB_Operator {
 		}
 		return flightEntity;
 	}
+	
+	public ArrayList<FlightEntity> queryByLocaAndDateAndClass(String deptString, String destString, 
+			String dateString, String classString, String tableString) {
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
+		ArrayList<FlightEntity> flightEntities = null;
+		ResultSet resultSet = null;
+
+		resultSet = DBConnector.query(connection, QUERY_STRING + tableString
+				+ " where DPCT = '" + deptString + "' and DSCT = '" + destString + "' and DPDT = '"
+				+ dateString + "' and CLAS = '" + classString + "'");
+		try {
+			if (!resultSet.next()) {
+				return null;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		flightEntities = transformToFlightEntity(resultSet);
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return flightEntities;
+	}
 
 	public boolean book(String flightNumer, String dateString,
 			String classString, String tableString) {
