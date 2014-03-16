@@ -91,8 +91,8 @@ public class BookUI extends JFrame {
 		text3JLabel = new JLabel();
 
 		text3JLabel.setText(flightInfoStrings[2] + flightInfoStrings[3] + " "
-				+ " a " + flightInfoStrings[4]
-				+ " ticket, the price is " + flightInfoStrings[5] + " ?");
+				+ " a " + flightInfoStrings[4] + " ticket, the price is "
+				+ flightInfoStrings[5] + " ?");
 
 		nameJTextField = new JTextField(10);
 		nameJTextField.setText("HuYifei");
@@ -179,7 +179,7 @@ public class BookUI extends JFrame {
 
 		this.setResizable(false);
 		this.setVisible(true);
-		
+
 		confirmJButton.addActionListener(new confirmButtonHandler());
 	}
 
@@ -191,56 +191,55 @@ public class BookUI extends JFrame {
 			if (!validateInfo()) {
 				return;
 			}
-			
+
 			switch (flightInfoStrings[1]) {
-			case "airline1":
-				client.query("1*" + flightInfoStrings[0] + "*"
-						+  "1*" + getDate1(flightInfoStrings[3]) + "*"
+			case "Airline1":
+				client.query("1*" + flightInfoStrings[0] + "*" + "1*"
+						+ getDate1(flightInfoStrings[3]) + "*"
 						+ flightInfoStrings[4]);
 				break;
-			case "airline2":
-				client.query("1*" + flightInfoStrings[0] + "*"
-						+  "2*" + getDate1(flightInfoStrings[3]) + "*"
+			case "Airline2":
+				client.query("1*" + flightInfoStrings[0] + "*" + "2*"
+						+ getDate1(flightInfoStrings[3]) + "*"
 						+ flightInfoStrings[4]);
 				break;
-			
-			case "airline3":
-				client.query("1*" + flightInfoStrings[0] + "*"
-						+  "3*" +  getDate1(flightInfoStrings[3]) + "*"
+
+			case "Airline3":
+				client.query("1*" + flightInfoStrings[0] + "*" + "3*"
+						+ getDate1(flightInfoStrings[3]) + "*"
 						+ flightInfoStrings[4]);
 				break;
 			default:
 				break;
 			}
-			
+
 			resultString = client.getResultString();
-			
+
 			switch (flightInfoStrings2[1]) {
-			case "airline1":
-				client.query("1*" + flightInfoStrings2[0] + "*"
-						+  "1*" + getDate1(flightInfoStrings2[3]) + "*"
+			case "Airline1":
+				client.query("1*" + flightInfoStrings2[0] + "*" + "1*"
+						+ getDate1(flightInfoStrings2[3]) + "*"
 						+ flightInfoStrings2[4]);
 				break;
-			case "airline2":
-				client.query("1*" + flightInfoStrings2[0] + "*"
-						+  "2*" + getDate1(flightInfoStrings2[3]) + "*"
+			case "Airline2":
+				client.query("1*" + flightInfoStrings2[0] + "*" + "2*"
+						+ getDate1(flightInfoStrings2[3]) + "*"
 						+ flightInfoStrings2[4]);
 				break;
-			
-			case "airline3":
-				client.query("1*" + flightInfoStrings2[0] + "*"
-						+  "3*" +  getDate1(flightInfoStrings2[3]) + "*"
+
+			case "Airline3":
+				client.query("1*" + flightInfoStrings2[0] + "*" + "3*"
+						+ getDate1(flightInfoStrings2[3]) + "*"
 						+ flightInfoStrings2[4]);
 				break;
 			default:
 				break;
 			}
 			resultString2 = client.getResultString();
-			
-			if (resultString.equals("false")) {
-				JOptionPane.showMessageDialog(null,
-						"Oops... Booking failed!", "Error",
-						JOptionPane.ERROR_MESSAGE);
+
+			if (resultString.equals("false") || resultString2.equals("false")) {
+				JOptionPane.showMessageDialog(null, "Oops... Booking failed!",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				String[][] strings = new String[11][4];
 				strings[0][0] = getCity1(flightInfoStrings[2]);
@@ -251,15 +250,15 @@ public class BookUI extends JFrame {
 				strings[1][1] = flightInfoStrings[0];
 				strings[1][2] = "Terminal 1";
 				strings[1][3] = phoneJTextField.getText();
-				strings[2][0] = "need to do";
+				strings[2][0] = getAirport(flightInfoStrings[2]);
 				strings[2][1] = flightInfoStrings[4];
-				strings[2][2] = "need to do";
+				strings[2][2] = getAirport2(flightInfoStrings[2]);
 				strings[2][3] = "Price is :¡¡" + flightInfoStrings[5];
 				strings[3][0] = getDate1(flightInfoStrings[3]);
 				strings[3][2] = getDate2(flightInfoStrings[3]);
-				strings[4][0] = "time";
-				strings[4][2] = "time";
-				
+				strings[4][0] = getTime(flightInfoStrings[3]);
+				strings[4][2] = getTime2(flightInfoStrings[3]);
+
 				strings[6][0] = getCity1(flightInfoStrings2[2]);
 				strings[6][1] = flightInfoStrings2[1];
 				strings[6][2] = getCity2(flightInfoStrings2[2]);
@@ -268,20 +267,20 @@ public class BookUI extends JFrame {
 				strings[7][1] = flightInfoStrings2[0];
 				strings[7][2] = "Terminal 1";
 				strings[7][3] = phoneJTextField.getText();
-				strings[8][0] = "need to do";
+				strings[8][0] = getAirport(flightInfoStrings2[2]);
 				strings[8][1] = flightInfoStrings2[4];
-				strings[8][2] = "need to do";
+				strings[8][2] = getAirport2(flightInfoStrings2[2]);
 				strings[8][3] = "Price is :¡¡" + flightInfoStrings2[5];
 				strings[9][0] = getDate1(flightInfoStrings2[3]);
 				strings[9][2] = getDate2(flightInfoStrings2[3]);
-				strings[10][0] = "time";
-				strings[10][2] = "time";
-				
+				strings[10][0] = getTime(flightInfoStrings2[3]);
+				strings[10][2] = getTime2(flightInfoStrings2[3]);
+
 				fillTable(strings);
 			}
 		}
 	}
-	
+
 	public void fillTable(String[][] strings) {
 
 		DefaultTableModel defaultTableModel = (DefaultTableModel) ticketJTable
@@ -289,43 +288,49 @@ public class BookUI extends JFrame {
 		defaultTableModel.setRowCount(0);
 
 		for (int i = 0; i < strings.length; i++) {
-			
+
 			tableModel.addRow(strings[i]);
 		}
-		
+
 		ticketJTable.updateUI();
 	}
-	
+
 	public boolean validateInfo() {
-		Pattern emailPattern = Pattern.compile("^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$");
+		Pattern emailPattern = Pattern
+				.compile("^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$");
 		Pattern phonePattern = Pattern.compile("[0-9]{11}");
 		Pattern creditPattern = Pattern.compile("[0-9]{16}");
-		
+
 		Matcher emailMatcher = emailPattern.matcher(emailJTextField.getText());
 		Matcher phoneMatcher = phonePattern.matcher(phoneJTextField.getText());
-		Matcher creditMatcher = creditPattern.matcher(creditJTextField.getText());
-		
+		Matcher creditMatcher = creditPattern.matcher(creditJTextField
+				.getText());
+
 		if (!emailMatcher.matches()) {
 			JOptionPane.showMessageDialog(null,
 					"Please input the right format of Email!", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
 		} else if (!phoneMatcher.matches()) {
-			JOptionPane.showMessageDialog(null,
-					"Please input the right format of phone number (11 digits)!", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Please input the right format of phone number (11 digits)!",
+							"Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} else if (!creditMatcher.matches()) {
-			JOptionPane.showMessageDialog(null,
-					"Please input the right format of credit number (16 digits)!", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Please input the right format of credit number (16 digits)!",
+							"Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	public String getDate1(String string) {
 		Pattern datePattern = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
 		Matcher m = datePattern.matcher(string);
@@ -335,7 +340,7 @@ public class BookUI extends JFrame {
 			return "$";
 		}
 	}
-	
+
 	public String getDate2(String string) {
 		Pattern datePattern = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}");
 		Matcher m = datePattern.matcher(string);
@@ -346,7 +351,7 @@ public class BookUI extends JFrame {
 			return "$";
 		}
 	}
-	
+
 	public String getCity1(String string) {
 		Pattern datePattern = Pattern.compile("[AC]_CITY[0-9]");
 		Matcher m = datePattern.matcher(string);
@@ -356,9 +361,51 @@ public class BookUI extends JFrame {
 			return "$";
 		}
 	}
-	
+
 	public String getCity2(String string) {
 		Pattern datePattern = Pattern.compile("[AC]_CITY[0-9]");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			m.find();
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+
+	public String getAirport(String string) {
+		Pattern datePattern = Pattern.compile("\\w{2}_Airport");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+
+	public String getAirport2(String string) {
+		Pattern datePattern = Pattern.compile("\\w{2}_Airport");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			m.find();
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+	
+	public String getTime(String string) {
+		Pattern datePattern = Pattern.compile("\\d{2}:\\d{2}:\\d{2}");
+		Matcher m = datePattern.matcher(string);
+		if (m.find()) {
+			return m.group(0);
+		} else {
+			return "$";
+		}
+	}
+	
+	public String getTime2(String string) {
+		Pattern datePattern = Pattern.compile("\\d{2}:\\d{2}:\\d{2}");
 		Matcher m = datePattern.matcher(string);
 		if (m.find()) {
 			m.find();

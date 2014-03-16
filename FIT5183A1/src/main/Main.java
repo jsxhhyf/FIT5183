@@ -31,29 +31,16 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		Util.debug(getCity2("FROMTO C_CITY1   jjfkk A_CITY1"));
+		Util.debug(getAirport("FROMTO C_CITY1   jjfkk A_CITY1  C1_Airport"));
 	}
 	
-	public static String getCity2(String string) {
-		Pattern datePattern = Pattern.compile("[AC]_CITY[0-9]");
+	public static String getAirport(String string) {
+		Pattern datePattern = Pattern.compile("\\w{2}_Airport");
 		Matcher m = datePattern.matcher(string);
 		if (m.find()) {
-			m.find();
 			return m.group(0);
 		} else {
 			return "$";
 		}
-	}
-
-	public void function() {
-		System.out.println("«Î ‰»Î£∫");
-		boolean flag = false;
-		int a = 0;
-		Scanner scanner = new Scanner(System.in);
-		while (true) {
-			a = scanner.nextInt();
-		}
-		
-		
 	}
 }

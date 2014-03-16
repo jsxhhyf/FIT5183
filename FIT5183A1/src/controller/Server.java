@@ -130,7 +130,7 @@ class SocketHandler extends Thread {
 								String flightInfo = flightEntity
 										.getFlightNumString()
 										+ "*"
-										+ "airline"
+										+ "Airline"
 										+ tablename
 										+ "*"
 										+ flightEntity.getDeptCityString()
@@ -174,6 +174,7 @@ class SocketHandler extends Thread {
 								String flightInfo = flightEntity
 										.getFlightNumString()
 										+ "*"
+										+ "Airline"
 										+ tablename
 										+ "*"
 										+ flightEntity.getDeptCityString()
