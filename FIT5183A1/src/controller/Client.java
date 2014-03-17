@@ -63,33 +63,6 @@ public class Client {
 
 	}
 
-	/**
-	 * @return the reader
-	 */
-	public BufferedReader getReader() {
-		return reader;
-	}
-
-	/**
-	 * @param reader the reader to set
-	 */
-	public void setReader(BufferedReader reader) {
-		this.reader = reader;
-	}
-
-	/**
-	 * @return the printer
-	 */
-	public PrintStream getPrinter() {
-		return printer;
-	}
-
-	/**
-	 * @param printer the printer to set
-	 */
-	public void setPrinter(PrintStream printer) {
-		this.printer = printer;
-	}
 
 	public Socket getClientSocket() {
 		return clientSocket;
