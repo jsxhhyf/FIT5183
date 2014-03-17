@@ -12,6 +12,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -347,6 +349,21 @@ public class ClientGUI extends JFrame {
 
 		queryJButton.addActionListener(new queryButtonHandler());
 		bookJButton.addActionListener(new bookButtonHandler());
+		
+		dpdyJComboBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				// TODO Auto-generated method stub
+				if (arg0.getStateChange() == ItemEvent.SELECTED) {
+					bcdyJComboBox.removeAllItems();
+					for(int i = Integer.parseInt(arg0.getItem().toString()); i < 32; i++) {
+						bcdyJComboBox.addItem("" + i);
+					}
+					bcdyJComboBox.setSelectedItem(arg0.getItem());
+				}
+			}
+		});
 	}
 
 	private class queryButtonHandler implements ActionListener {
