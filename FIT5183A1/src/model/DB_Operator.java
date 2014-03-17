@@ -72,7 +72,7 @@ public class DB_Operator {
 	 * @param tableString
 	 * @return FlightEntity structure which represents the corresponding flight
 	 */
-	public ArrayList<FlightEntity> queryFlightByNo(String flightNoString,
+	public ArrayList<FlightEntity> queryFlightByNoAndDate(String flightNoString, String dateString, 
 			String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
@@ -91,7 +91,7 @@ public class DB_Operator {
 			return null;
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
-					+ tableString + " where FLNO = '" + flightNoString + "'");
+					+ tableString + " where FLNO = '" + flightNoString + "' and DPDT = '" + dateString + "'");
 			try {
 
 				if (!resultSet.next()) {
@@ -114,7 +114,7 @@ public class DB_Operator {
 		}
 	}
 	
-	public ArrayList<FlightEntity> queryFlightByNoAndClass(String flightNoString, String classString, 
+	public ArrayList<FlightEntity> queryFlightByNoAndDateAndClass(String flightNoString, String dateString, String classString, 
 			String tableString) {
 
 		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
@@ -133,7 +133,7 @@ public class DB_Operator {
 			return null;
 		} else {
 			resultSet = DBConnector.query(connection, QUERY_STRING
-					+ tableString + " where FLNO = '" + flightNoString + "' and CLAS = '" + classString + "'");
+					+ tableString + " where FLNO = '" + flightNoString + "' and CLAS = '" + classString + "' and DPDT = '" + dateString + "'");
 			try {
 
 				if (!resultSet.next()) {

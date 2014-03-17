@@ -110,13 +110,13 @@ class SocketHandler extends Thread {
 					if (!strings[1].equals("$")) {
 						switch (strings[6]) {
 						case "ALL":
-							flightEntities = dbOperator.queryFlightByNo(
-									strings[1], "airline" + tablename);
+							flightEntities = dbOperator.queryFlightByNoAndDate(
+									strings[1], strings[5], "airline" + tablename);
 							break;
 
 						default:
 							flightEntities = dbOperator
-									.queryFlightByNoAndClass(strings[1],
+									.queryFlightByNoAndDateAndClass(strings[1], strings[5], 
 											strings[6], "airline" + tablename);
 							break;
 						}

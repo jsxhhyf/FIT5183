@@ -50,10 +50,12 @@ public class ClientGUI extends JFrame {
 			"12:00 - 18:00", "18:00 - 24:00" };
 	private String[] classItems = { "ALL", "ECO", "BUS", "FIR" };
 	private String[] airlineItems = { "Air China", "Qantas", "China Eastern" };
-	private String[] cityItems = { "CN_Shanghai", "CN_Beijing", "CN_Guangzhou", "CN_Shenzhen",
-			"AU_Sydney", "AU_Canberra", "AU_Melbourne", "AU_Adelaide" };
-	private String[] city2Items = { "AU_Sydney", "AU_Canberra", "AU_Melbourne", "AU_Adelaide",
-			"CN_Shanghai", "CN_Beijing", "CN_Guangzhou", "CN_Shenzhen" };
+	private String[] cityItems = { "CN_Shanghai", "CN_Beijing", "CN_Guangzhou",
+			"CN_Shenzhen", "AU_Sydney", "AU_Canberra", "AU_Melbourne",
+			"AU_Adelaide" };
+	private String[] city2Items = { "AU_Sydney", "AU_Canberra", "AU_Melbourne",
+			"AU_Adelaide", "CN_Shanghai", "CN_Beijing", "CN_Guangzhou",
+			"CN_Shenzhen" };
 	private String[] yearItems = { "2014" };
 	private String[] monthItems = { "03" };
 
@@ -68,7 +70,7 @@ public class ClientGUI extends JFrame {
 	private JLabel clJLabel;
 	private JLabel cl2JLabel;
 	private JLabel alJLabel;
-//	private JLabel al2JLabel;
+	// private JLabel al2JLabel;
 
 	private JTextField flJTextField;
 	private JTextField fl2JTextField;
@@ -81,7 +83,7 @@ public class ClientGUI extends JFrame {
 	private JComboBox<String> classJComboBox;
 	private JComboBox<String> class2JComboBox;
 	private JComboBox<String> airlineJComboBox;
-//	private JComboBox<String> airline2JComboBox;
+	// private JComboBox<String> airline2JComboBox;
 	private JComboBox<String> dpctJComboBox;
 	private JComboBox<String> dsctJComboBox;
 	private JComboBox<String> dpyrJComboBox;
@@ -130,12 +132,12 @@ public class ClientGUI extends JFrame {
 		clJLabel = new JLabel("Class");
 		cl2JLabel = new JLabel("Class");
 		alJLabel = new JLabel("Airline");
-//		al2JLabel = new JLabel("Airline");
+		// al2JLabel = new JLabel("Airline");
 
 		flJTextField = new JTextField(10);
 		fl2JTextField = new JTextField(10);
-//		flJTextField.setText("CA1220");
-//		fl2JTextField.setText("AC1000");
+		flJTextField.setText("CA0835");
+		fl2JTextField.setText("AC0612");
 		// dpdtJTextField = new JTextField(10);
 		// dpctJTextField = new JTextField(10);
 		// dsctJTextField = new JTextField(10);
@@ -146,7 +148,7 @@ public class ClientGUI extends JFrame {
 		classJComboBox = new JComboBox<String>(classItems);
 		class2JComboBox = new JComboBox<String>(classItems);
 		airlineJComboBox = new JComboBox<String>(airlineItems);
-//		airline2JComboBox = new JComboBox<String>(airlineItems);
+		// airline2JComboBox = new JComboBox<String>(airlineItems);
 		dpctJComboBox = new JComboBox<String>(cityItems);
 		dsctJComboBox = new JComboBox<String>(city2Items);
 		dpyrJComboBox = new JComboBox<String>(yearItems);
@@ -168,7 +170,7 @@ public class ClientGUI extends JFrame {
 		leftJPanel.setVisible(true);
 		// leftUpJPanel.setVisible(true);
 
-		dataJTable = new JTable(tableModel){
+		dataJTable = new JTable(tableModel) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -251,13 +253,13 @@ public class ClientGUI extends JFrame {
 		constraints.gridwidth = 3;
 		rightJPanel.add(airlineJComboBox, constraints);
 
-//		constraints.gridx = 4;
-//		constraints.gridwidth = 1;
-//		rightJPanel.add(al2JLabel, constraints);
-//
-//		constraints.gridx = 5;
-//		constraints.gridwidth = 3;
-//		rightJPanel.add(airline2JComboBox, constraints);
+		// constraints.gridx = 4;
+		// constraints.gridwidth = 1;
+		// rightJPanel.add(al2JLabel, constraints);
+		//
+		// constraints.gridx = 5;
+		// constraints.gridwidth = 3;
+		// rightJPanel.add(airline2JComboBox, constraints);
 
 		// --------------------------------------------------- line 3
 
@@ -350,80 +352,85 @@ public class ClientGUI extends JFrame {
 	private class queryButtonHandler implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			String tempString = validateQueryInput1();
+			String[][] strings = null;
+			String[] rowStrings = null;
+			String[] temp;
+
 			if (tempString != null) {
 				client.query(tempString);
-			}
-			tempString = client.getResultString();
 
-			Util.debug("从client返回的查询结果:" + tempString);
+				tempString = client.getResultString();
 
-			String[] rowStrings = tempString.split("#");
-			String[][] strings = new String[rowStrings.length][7];
-			String[] temp;
-			int i = 0;
-			for (String row : rowStrings) {
-				temp = row.split("\\*");
-				if (temp[0].equals("$")) {
+				Util.debug("从client返回的查询结果:" + tempString);
+
+				rowStrings = tempString.split("#");
+				strings = new String[rowStrings.length][7];
+
+				int i = 0;
+				for (String row : rowStrings) {
+					temp = row.split("\\*");
+					if (temp[0].equals("$")) {
+						strings[i] = temp;
+						i++;
+						continue;
+					}
+					temp[2] = "FROM " + temp[2] + " " + temp[3] + " TO "
+							+ temp[4] + " " + temp[5];
+					temp[3] = "DEPT AT " + temp[6] + " " + temp[8]
+							+ " ARRIVE AT " + temp[7] + " " + temp[9];
+					temp[4] = temp[10];
+					temp[5] = temp[11];
+					temp[6] = temp[12];
 					strings[i] = temp;
 					i++;
-					continue;
+
 				}
-				temp[2] = "FROM " + temp[2] + " " + temp[3] + " TO " + temp[4]
-						+ " " + temp[5];
-				temp[3] = "DEPT AT " + temp[6] + " " + temp[8] + " ARRIVE AT "
-						+ temp[7] + " " + temp[9];
-				temp[4] = temp[10];
-				temp[5] = temp[11];
-				temp[6] = temp[12];
-				strings[i] = temp;
-				i++;
 
-			}
-
-			for (String[] strings4 : strings) {
-				for (String string : strings4) {
-					Util.debug(string);
+				for (String[] strings4 : strings) {
+					for (String string : strings4) {
+						Util.debug(string);
+					}
 				}
 			}
-
 			// =============================================== return ticket
 
 			tempString = validateQueryInput2();
+			String[][] strings2 = null;
 			if (tempString != null) {
 				client.query(tempString);
-			}
-			tempString = client.getResultString();
 
-			Util.debug("从client返回的查询结果:" + tempString);
+				tempString = client.getResultString();
 
-			rowStrings = tempString.split("#");
-			String[][] strings2 = new String[rowStrings.length][7];
-			i = 0;
-			for (String row : rowStrings) {
-				temp = row.split("\\*");
-				if (temp[0].equals("$")) {
+				Util.debug("从client返回的查询结果:" + tempString);
+
+				rowStrings = tempString.split("#");
+				strings2 = new String[rowStrings.length][7];
+				int i = 0;
+				for (String row : rowStrings) {
+					temp = row.split("\\*");
+					if (temp[0].equals("$")) {
+						strings2[i] = temp;
+						i++;
+						continue;
+					}
+					temp[2] = "FROM " + temp[2] + " " + temp[3] + " TO "
+							+ temp[4] + " " + temp[5];
+					temp[3] = "DEPT AT " + temp[6] + " " + temp[8]
+							+ " ARRIVE AT " + temp[7] + " " + temp[9];
+					temp[4] = temp[10];
+					temp[5] = temp[11];
+					temp[6] = temp[12];
 					strings2[i] = temp;
 					i++;
-					continue;
+
 				}
-				temp[2] = "FROM " + temp[2] + " " + temp[3] + " TO " + temp[4]
-						+ " " + temp[5];
-				temp[3] = "DEPT AT " + temp[6] + " " + temp[8] + " ARRIVE AT "
-						+ temp[7] + " " + temp[9];
-				temp[4] = temp[10];
-				temp[5] = temp[11];
-				temp[6] = temp[12];
-				strings2[i] = temp;
-				i++;
 
-			}
-
-			for (String[] strings3 : strings2) {
-				for (String string : strings3) {
-					Util.debug(string);
+				for (String[] strings3 : strings2) {
+					for (String string : strings3) {
+						Util.debug(string);
+					}
 				}
 			}
-
 			// ======================================================
 
 			fillTable1(strings);
@@ -487,20 +494,23 @@ public class ClientGUI extends JFrame {
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
 			case "Air China":
-				return "0*" + tempFlightNoString + "*1*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*1*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			case "Qantas":
-				return "0*" + tempFlightNoString + "*2*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*2*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			case "China Eastern":
-				return "0*" + tempFlightNoString + "*3*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*3*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			default:
-				return "0*" + tempFlightNoString + "*0*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*0*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			}
 		} else if (!tempFlightNoString.equals("")
 				&& tempFlightNoString.length() != 6) {
+			JOptionPane.showMessageDialog(null,
+					"Please input the right flight number!", "Error",
+					JOptionPane.ERROR_MESSAGE);
 			return null;
 		} else if (tempFlightNoString.equals("")) {
 			if (tempDepartingCityString.equals("")
@@ -558,20 +568,23 @@ public class ClientGUI extends JFrame {
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
 			case "Air China":
-				return "0*" + tempFlightNoString + "*1*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*1*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			case "Qantas":
-				return "0*" + tempFlightNoString + "*2*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*2*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			case "China Eastern":
-				return "0*" + tempFlightNoString + "*3*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*3*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			default:
-				return "0*" + tempFlightNoString + "*0*$*$*$*" + classString
-						+ "*#";
+				return "0*" + tempFlightNoString + "*0*$*$*"
+						+ tempDepartingDateString + "*" + classString + "*#";
 			}
 		} else if (!tempFlightNoString.equals("")
 				&& tempFlightNoString.length() != 6) {
+			JOptionPane.showMessageDialog(null,
+					"Please input the right flight number!", "Error",
+					JOptionPane.ERROR_MESSAGE);
 			return null;
 		} else if (tempFlightNoString.equals("")) {
 			if (tempDepartingCityString.equals("")

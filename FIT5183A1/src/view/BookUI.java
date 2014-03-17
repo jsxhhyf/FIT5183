@@ -273,12 +273,14 @@ public class BookUI extends JFrame {
 				undo(2);
 				JOptionPane.showMessageDialog(null, "Oops... Booking failed!",
 						"Error", JOptionPane.ERROR_MESSAGE);
-			} else if (resultString2.equals("false") && resultString.equals("true")) {
+			} else if (resultString2.equals("false")
+					&& resultString.equals("true")) {
 				Util.debug("10");
 				undo(1);
 				JOptionPane.showMessageDialog(null, "Oops... Booking failed!",
 						"Error", JOptionPane.ERROR_MESSAGE);
-			} else if (resultString.equals("false") && resultString2.equals("false")) {
+			} else if (resultString.equals("false")
+					&& resultString2.equals("false")) {
 				Util.debug("00");
 				JOptionPane.showMessageDialog(null, "Oops... Booking failed!",
 						"Error", JOptionPane.ERROR_MESSAGE);
