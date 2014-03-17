@@ -31,11 +31,11 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		Util.debug(getAirport("FROMTO C_CITY1   jjfkk A_CITY1  C1_Airport"));
+		Util.debug(getCity1("FROMTO AU_Sydney  CN_Shanghai  jjfkk   PuDong_Airport"));
 	}
 	
-	public static String getAirport(String string) {
-		Pattern datePattern = Pattern.compile("\\w{2}_Airport");
+	public static String getCity1(String string) {
+		Pattern datePattern = Pattern.compile("(AU|CN)_\\w+");
 		Matcher m = datePattern.matcher(string);
 		if (m.find()) {
 			return m.group(0);

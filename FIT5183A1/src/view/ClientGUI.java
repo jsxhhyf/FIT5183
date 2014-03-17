@@ -40,7 +40,7 @@ import controller.Client;
 public class ClientGUI extends JFrame {
 
 	private String[] columnName = { "FlightNumber", "Airline", "City", "Date",
-			"Class", "Price", "AvaliableSeats" };
+			"Class", "Price", "Vacancy" };
 	private Object[][] cellData = null;
 	private DefaultTableModel tableModel = new DefaultTableModel(cellData,
 			columnName);
@@ -49,15 +49,11 @@ public class ClientGUI extends JFrame {
 	private String[] timeItems = { "ALL", "00:00 - 06:00", "06:00 - 12:00",
 			"12:00 - 18:00", "18:00 - 24:00" };
 	private String[] classItems = { "ALL", "ECO", "BUS", "FIR" };
-	private String[] airlineItems = { "ALL", "Airline1", "Airline2", "Airline3" };
-	private String[] cityItems = { "C_CITY1", "C_CITY2", "C_CITY3", "C_CITY4",
-			"C_CITY5", "C_CITY6", "C_CITY7", "C_CITY8", "C_CITY9", "C_CITY10",
-			"A_CITY1", "A_CITY2", "A_CITY3", "A_CITY4", "A_CITY5", "A_CITY6",
-			"A_CITY7", "A_CITY8", "A_CITY9", "A_CITY10" };
-	private String[] city2Items = { "A_CITY1", "A_CITY2", "A_CITY3", "A_CITY4",
-			"A_CITY5", "A_CITY6", "A_CITY7", "A_CITY8", "A_CITY9", "A_CITY10",
-			"C_CITY1", "C_CITY2", "C_CITY3", "C_CITY4", "C_CITY5", "C_CITY6",
-			"C_CITY7", "C_CITY8", "C_CITY9", "C_CITY10" };
+	private String[] airlineItems = { "Air China", "Qantas", "China Eastern" };
+	private String[] cityItems = { "CN_Shanghai", "CN_Beijing", "CN_Guangzhou", "CN_Shenzhen",
+			"AU_Sydney", "AU_Canberra", "AU_Melbourne", "AU_Adelaide" };
+	private String[] city2Items = { "AU_Sydney", "AU_Canberra", "AU_Melbourne", "AU_Adelaide",
+			"CN_Shanghai", "CN_Beijing", "CN_Guangzhou", "CN_Shenzhen" };
 	private String[] yearItems = { "2014" };
 	private String[] monthItems = { "03" };
 
@@ -72,7 +68,7 @@ public class ClientGUI extends JFrame {
 	private JLabel clJLabel;
 	private JLabel cl2JLabel;
 	private JLabel alJLabel;
-	private JLabel al2JLabel;
+//	private JLabel al2JLabel;
 
 	private JTextField flJTextField;
 	private JTextField fl2JTextField;
@@ -85,7 +81,7 @@ public class ClientGUI extends JFrame {
 	private JComboBox<String> classJComboBox;
 	private JComboBox<String> class2JComboBox;
 	private JComboBox<String> airlineJComboBox;
-	private JComboBox<String> airline2JComboBox;
+//	private JComboBox<String> airline2JComboBox;
 	private JComboBox<String> dpctJComboBox;
 	private JComboBox<String> dsctJComboBox;
 	private JComboBox<String> dpyrJComboBox;
@@ -121,7 +117,7 @@ public class ClientGUI extends JFrame {
 
 		this.setTitle("MY FLIGHT BOOKING CENTRE");
 		this.setLayout(new BorderLayout());
-		this.setSize(1500, 600);
+		this.setSize(1500, 1000);
 		// this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -134,7 +130,7 @@ public class ClientGUI extends JFrame {
 		clJLabel = new JLabel("Class");
 		cl2JLabel = new JLabel("Class");
 		alJLabel = new JLabel("Airline");
-		al2JLabel = new JLabel("Airline");
+//		al2JLabel = new JLabel("Airline");
 
 		flJTextField = new JTextField(10);
 		fl2JTextField = new JTextField(10);
@@ -150,7 +146,7 @@ public class ClientGUI extends JFrame {
 		classJComboBox = new JComboBox<String>(classItems);
 		class2JComboBox = new JComboBox<String>(classItems);
 		airlineJComboBox = new JComboBox<String>(airlineItems);
-		airline2JComboBox = new JComboBox<String>(airlineItems);
+//		airline2JComboBox = new JComboBox<String>(airlineItems);
 		dpctJComboBox = new JComboBox<String>(cityItems);
 		dsctJComboBox = new JComboBox<String>(city2Items);
 		dpyrJComboBox = new JComboBox<String>(yearItems);
@@ -177,11 +173,13 @@ public class ClientGUI extends JFrame {
 				return false;
 			}
 		};
-		dataJTable.setRowHeight(30);
+		dataJTable.setRowHeight(40);
 		TableColumnModel tcm = dataJTable.getColumnModel();
 		TableColumn tc = tcm.getColumn(2);
+		tc.setPreferredWidth(195);
 		tc.setCellRenderer(new TextAreaCellRenderer());
 		tc = tcm.getColumn(3);
+		tc.setPreferredWidth(160);
 		tc.setCellRenderer(new TextAreaCellRenderer());
 		jScrollPane = new JScrollPane(dataJTable);
 
@@ -190,11 +188,13 @@ public class ClientGUI extends JFrame {
 				return false;
 			}
 		};
-		data2JTable.setRowHeight(30);
+		data2JTable.setRowHeight(40);
 		TableColumnModel tcm2 = data2JTable.getColumnModel();
 		TableColumn tc2 = tcm2.getColumn(2);
+		tc2.setPreferredWidth(195);
 		tc2.setCellRenderer(new TextAreaCellRenderer());
 		tc2 = tcm2.getColumn(3);
+		tc2.setPreferredWidth(160);
 		tc2.setCellRenderer(new TextAreaCellRenderer());
 		jScroll2Pane = new JScrollPane(data2JTable);
 
@@ -206,7 +206,7 @@ public class ClientGUI extends JFrame {
 		constraints.insets = new Insets(0, 0, 0, 0);
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.ipadx = 775;
-		constraints.ipady = 235;
+		constraints.ipady = 435;
 		// constraints.weighty = 0.05;
 		leftJPanel.add(jScrollPane, constraints);
 		constraints.gridy = 1;
@@ -225,6 +225,7 @@ public class ClientGUI extends JFrame {
 		constraints.gridy = 0;
 		constraints.weighty = 1;
 		constraints.insets = new Insets(20, 10, 20, 10);
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		rightJPanel.add(flJLabel, constraints);
 
 		constraints.gridx = 1;
@@ -250,13 +251,13 @@ public class ClientGUI extends JFrame {
 		constraints.gridwidth = 3;
 		rightJPanel.add(airlineJComboBox, constraints);
 
-		constraints.gridx = 4;
-		constraints.gridwidth = 1;
-		rightJPanel.add(al2JLabel, constraints);
-
-		constraints.gridx = 5;
-		constraints.gridwidth = 3;
-		rightJPanel.add(airline2JComboBox, constraints);
+//		constraints.gridx = 4;
+//		constraints.gridwidth = 1;
+//		rightJPanel.add(al2JLabel, constraints);
+//
+//		constraints.gridx = 5;
+//		constraints.gridwidth = 3;
+//		rightJPanel.add(airline2JComboBox, constraints);
 
 		// --------------------------------------------------- line 3
 
@@ -331,8 +332,9 @@ public class ClientGUI extends JFrame {
 		constraints.gridwidth = 8;
 		constraints.gridheight = GridBagConstraints.REMAINDER;
 		constraints.weighty = 1;
-		// constraints.ipady = 130;
-		constraints.insets = new Insets(100, 0, 0, 0);
+		constraints.ipady = 20;
+		constraints.insets = new Insets(600, 0, 0, 0);
+		constraints.gridheight = GridBagConstraints.REMAINDER;
 		rightJPanel.add(queryJButton, constraints);
 
 		this.add(leftJPanel, "Center");
@@ -484,13 +486,13 @@ public class ClientGUI extends JFrame {
 
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
-			case "Airline1":
+			case "Air China":
 				return "0*" + tempFlightNoString + "*1*$*$*$*" + classString
 						+ "*#";
-			case "Airline2":
+			case "Qantas":
 				return "0*" + tempFlightNoString + "*2*$*$*$*" + classString
 						+ "*#";
-			case "Airline3":
+			case "China Eastern":
 				return "0*" + tempFlightNoString + "*3*$*$*$*" + classString
 						+ "*#";
 			default:
@@ -513,15 +515,15 @@ public class ClientGUI extends JFrame {
 				}
 			}
 			switch (tempAirlineString) {
-			case "Airline1":
+			case "Air China":
 				return "0*$*1*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
 						+ tempDepartingDateString + "*" + classString + "*#";
-			case "Airline2":
+			case "Qantas":
 				return "0*$*2*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
 						+ tempDepartingDateString + "*" + classString + "*#";
-			case "Airline3":
+			case "China Eastern":
 				return "0*$*3*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
 						+ tempDepartingDateString + "*" + classString + "*#";
@@ -540,7 +542,7 @@ public class ClientGUI extends JFrame {
 		// Operation0*FlightNo1*Airline2*DepartingCity3*DestinationCity4*
 		// DepatingDate5*Class6*#
 		String tempFlightNoString = fl2JTextField.getText();
-		String tempAirlineString = airline2JComboBox.getSelectedItem()
+		String tempAirlineString = airlineJComboBox.getSelectedItem()
 				.toString();
 		String tempDepartingCityString = dsctJComboBox.getSelectedItem()
 				.toString();
@@ -555,13 +557,13 @@ public class ClientGUI extends JFrame {
 
 		if (tempFlightNoString.length() == 6) {
 			switch (tempAirlineString) {
-			case "Airline1":
+			case "Air China":
 				return "0*" + tempFlightNoString + "*1*$*$*$*" + classString
 						+ "*#";
-			case "Airline2":
+			case "Qantas":
 				return "0*" + tempFlightNoString + "*2*$*$*$*" + classString
 						+ "*#";
-			case "Airline3":
+			case "China Eastern":
 				return "0*" + tempFlightNoString + "*3*$*$*$*" + classString
 						+ "*#";
 			default:
@@ -584,15 +586,15 @@ public class ClientGUI extends JFrame {
 				}
 			}
 			switch (tempAirlineString) {
-			case "Airline1":
+			case "Air China":
 				return "0*$*1*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
 						+ tempDepartingDateString + "*" + classString + "*#";
-			case "Airline2":
+			case "Qantas":
 				return "0*$*2*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
 						+ tempDepartingDateString + "*" + classString + "*#";
-			case "Airline3":
+			case "China Eastern":
 				return "0*$*3*" + tempDepartingCityString + "*"
 						+ tempDestinationCityString + "*"
 						+ tempDepartingDateString + "*" + classString + "*#";

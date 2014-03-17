@@ -388,6 +388,31 @@ public class DB_Operator {
 			return false;
 		}
 	}
+	
+	public boolean undo(String flightNumer, String dateString,
+			String classString, String tableString) {
+		Connection connection = DBConnector.connect(DBConnector.CONNECT_STRING);
+		int temp = queryByFlightNoAndDateAndClass(flightNumer, dateString,
+				classString, tableString).getSeatAvalible();
+		temp++;
+		String updateString = "update " + tableString + " set SEAT = " + temp
+				+ " where FLNO = '" + flightNumer + "' and DPDT = '"
+						+ dateString + "' and CLAS = '" + classString + "'";
+
+		int rows = DBConnector.update(connection, updateString);
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (rows > 0) {
+			Util.debug("book successful!(book() in DB_Operator)");
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * pack the query result into FlightEntity structure for further use

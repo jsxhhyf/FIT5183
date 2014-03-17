@@ -125,13 +125,26 @@ class SocketHandler extends Thread {
 							Util.debug("no match");
 							printStream.println("$#");
 						} else {
+							String tempAirline = "";
+							switch (tablename) {
+							case 1:
+								tempAirline = "Air China";
+								break;
+							case 2:
+								tempAirline = "Qantas";
+								break;
+							case 3:
+								tempAirline = "China Eastern";
+								break;
+							default:
+								break;
+							}
 							for (FlightEntity flightEntity : flightEntities) {
 								// Util.debug(flightEntity.getSeatClass());
 								String flightInfo = flightEntity
 										.getFlightNumString()
 										+ "*"
-										+ "Airline"
-										+ tablename
+										+ tempAirline
 										+ "*"
 										+ flightEntity.getDeptCityString()
 										+ "*"
@@ -176,12 +189,25 @@ class SocketHandler extends Thread {
 							Util.debug("not matched!");
 							printStream.println("$#");
 						} else {
+							String tempAirline = "";
+							switch (tablename) {
+							case 1:
+								tempAirline = "Air China";
+								break;
+							case 2:
+								tempAirline = "Qantas";
+								break;
+							case 3:
+								tempAirline = "China Eastern";
+								break;
+							default:
+								break;
+							}
 							for (FlightEntity flightEntity : flightEntities) {
 								String flightInfo = flightEntity
 										.getFlightNumString()
 										+ "*"
-										+ "Airline"
-										+ tablename
+										+ tempAirline
 										+ "*"
 										+ flightEntity.getDeptCityString()
 										+ "*"
@@ -218,6 +244,17 @@ class SocketHandler extends Thread {
 								"airline" + tablename)) {
 							printStream.println("booked");
 							Util.debug("book successful!(run)");
+						} else {
+							printStream.println("failed");
+						}
+					}
+				} else if(strings[0].equals("2")) { // 2 for undo
+					synchronized (syncString) {
+						Util.debug("Server get undo request");
+						if (dbOperator.undo(strings[1], strings[3], strings[4],
+								"airline" + tablename)) {
+							printStream.println("booked");
+							Util.debug("undo successful!(run)");
 						} else {
 							printStream.println("failed");
 						}

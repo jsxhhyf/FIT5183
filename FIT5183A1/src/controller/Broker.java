@@ -150,6 +150,10 @@ class Handler extends Thread {
 					Util.debug("准备调用forwardUpdate");
 					printer.println(forwardUpdate(
 							Integer.valueOf(messageStrings[2]), incomingString));
+				} else if (messageStrings[0].equals("2")) {
+					Util.debug("准备调用forwardUpdate(undo)");
+					printer.println(forwardUpdate(
+							Integer.valueOf(messageStrings[2]), incomingString));
 				}
 
 			}
@@ -215,6 +219,7 @@ class Handler extends Thread {
 		}
 
 	}
+	
 	
 //	public String insertAirline(int airline, String string) {
 //		StringBuffer stringBuffer = new StringBuffer(string);
